@@ -1,0 +1,175 @@
+/* ----------------------------- */
+/* ==reset */
+/* ----------------------------- */
+/* base font-size corresponds to 10px and is adapted to rem unit */
+html {
+  font-size: 62.5%;
+  box-sizing: border-box;
+}
+
+@media screen and (max-width: 355px) {
+  html {
+    font-size: 50%;
+  }
+}
+
+*, *:before, *:after {
+  box-sizing: inherit;
+}
+
+body {
+  background-color: #fff;
+  font-family: 'Source Sans Pro', sans-serif;
+  font-size: 1.8em;
+  /* equiv 18px */
+  line-height: 1.5;
+  /* adapt to your design */
+}
+
+/* font-sizing for content */
+/* preserve vertical-rythm, thanks to http://soqr.fr/vertical-rhythm/ */
+p,
+ul,
+ol,
+dl,
+blockquote,
+pre,
+td,
+th,
+label,
+textarea,
+caption,
+details,
+figure,
+hgroup {
+  font-size: 1em;
+  /* equiv 14px */
+  line-height: 1.5;
+  margin: 1.5em 0 0;
+}
+
+/* alternate font-sizing */
+.smaller {
+  font-size: .7143em;
+  /* equiv 10px */
+  line-height: 2.1em;
+}
+
+.small {
+  font-size: .8571em;
+  /* equiv 12px */
+  line-height: 1.75em;
+}
+
+.big {
+  font-size: 1.1429em;
+  /* equiv 16px */
+  line-height: 1.3125em;
+}
+
+.bigger {
+  font-size: 1.2857em;
+  /* equiv 18px */
+  line-height: 1.1667em;
+}
+
+.biggest {
+  font-size: 1.4286em;
+  /* equiv 20px */
+  line-height: 1.05em;
+}
+
+/* soft reset */
+html,
+body,
+textarea,
+figure,
+label {
+  margin: 0;
+  padding: 0;
+}
+
+ul,
+ol {
+  padding-left: 2em;
+}
+
+code,
+pre,
+samp {
+  white-space: pre-wrap;
+  font-family: consolas, 'DejaVu Sans Mono', courier, monospace;
+}
+
+code {
+  line-height: 1em;
+}
+
+table {
+  margin-bottom: 1.5em;
+}
+
+/* avoid top margins on first content element */
+p:first-child,
+ul:first-child,
+ol:first-child,
+dl:first-child,
+blockquote:first-child,
+pre:first-child,
+h1:first-child,
+h2:first-child,
+h3:first-child,
+h4:first-child,
+h5:first-child,
+h6:first-child {
+  margin-top: 0;
+}
+
+/* avoid margins after header */
+h1 + p, h1 + h1, h1 + h2, h1 + h3, h1 + h4, h1 + h5, h1 + h6, h2 + p, h2 + h1, h2 + h2, h2 + h3, h2 + h4, h2 + h5, h2 + h6, h3 + p, h3 + h1, h3 + h2, h3 + h3, h3 + h4, h3 + h5, h3 + h6, h4 + p, h4 + h1, h4 + h2, h4 + h3, h4 + h4, h4 + h5, h4 + h6, h5 + p, h5 + h1, h5 + h2, h5 + h3, h5 + h4, h5 + h5, h5 + h6, h6 + p, h6 + h1, h6 + h2, h6 + h3, h6 + h4, h6 + h5, h6 + h6 {
+  margin-top: 0;
+}
+
+/* avoid margins on nested elements */
+li p,
+li ul,
+li ol {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+/* HTML5 tags */
+article, aside, details, figcaption, figure, footer, header, hgroup, nav, section {
+  display: block;
+}
+
+/* max values */
+img, table, td, blockquote, code, pre, textarea, input, video {
+  max-width: 100%;
+}
+
+/* you shall not pass */
+div, textarea, table, td, th, code, pre, samp {
+  word-wrap: break-word;
+  -webkit-hyphens: auto;
+  -moz-hyphens: auto;
+  -ms-hyphens: auto;
+  -o-hyphens: auto;
+  hyphens: auto;
+}
+
+/* pictures */
+img {
+  width: auto;
+  height: auto;
+  vertical-align: middle;
+}
+
+a img {
+  border: 0;
+}
+
+/* scripts */
+body > script {
+  display: none !important;
+}
