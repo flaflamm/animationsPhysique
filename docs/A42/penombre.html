@@ -1,4 +1,4 @@
-<div class="imageContainer aspectRation2-1"><div  id="penombre"></div></div>
+<div class="imageContainer aspectRation2-1"><div id="penombre"></div></div>
 
 <div class="controls">
   <label for="sourceTaille">Taille de la source:&nbsp;<input type="range" id="sourceTaille" name="sourceTaille" value="20" max="50" min="0" step="0.1" oninput="redraw()" onchange="redraw()"></label>
@@ -43,17 +43,22 @@
   vueSource = vue.circle(150).fill('#ff6').cx(900).cy(250);
   vueObject = vue.circle(100).fill('#116').cx(900).maskWith(masque);
 
+	//Redessine l'image en tenant compte des contrôles externes
   redraw();
 
   function redraw() {
+		//Définit et récupère les valeurs nécessaires à l'image.
     var xS = 80, xE = 700;
     var rS = parseFloat(document.getElementById("sourceTaille").value);
     var rO = parseFloat(document.getElementById("objetTaille").value);
     var xO = parseFloat(document.getElementById("objetPosition").value);
+
+		//Ajuste les rayons de la source et de l'objet et la position de l'objet.
     source.radius(rS);
     object.radius(rO);
     object.cx(xO);
 
+		//Ajuste le tracé des rayons.
     var rayonOmbre = rS + (xE-xS)*(rO-rS)/(xO-xS);
     var rayonPenombre = -rS + (xE-xS)*(rO+rS)/(xO-xS);
     ray1.plot([[xS, 250-rS], [xE, 250 - rayonOmbre]]);
@@ -61,6 +66,7 @@
     ray3.plot([[xS, 250+rS], [xE, 250 + rayonOmbre]]);
     ray4.plot([[xS, 250+rS], [xE, 250 - rayonPenombre]]);
 
+		//Redessine l'image
     image.radius(rayonPenombre/2,rayonPenombre);
     if(rayonOmbre>0) { imageGradient.update(function(stop) {stop.at({ offset: 0, color: '#23', opacity: 1 }), stop.at({ offset: rayonOmbre/rayonPenombre, color: '#23', opacity: 1 }), stop.at({ offset: 1, color: '#23', opacity: 0 }) }); }
     else {
@@ -68,6 +74,7 @@
       imageGradient.update(function(stop) {stop.at({ offset: 0, color: '#23', opacity: maxOpacity }), stop.at({ offset: -rayonOmbre/rayonPenombre, color: '#23', opacity: maxOpacity }), stop.at({ offset: 1, color: '#23', opacity: 0 }) });
     }
 
+		//Dessine l'oeil et la vue de l'oeil si nécessaire (sinon s'assurer qu'ils ne sont pas visibles)
     if(document.getElementById('observateur').checked) {
       var yOeil = -parseFloat(document.getElementById('observateurPosition').value);
       oeil.opacity(1).y(yOeil+250).rotate(yOeil/15);
