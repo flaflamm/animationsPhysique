@@ -28,7 +28,8 @@ $cours = array(
  <link href="utils/mainStyle.css?v=<?php echo mt_rand(); ?>" rel="stylesheet">
  <script type="text/javascript" src="utils/svg.min.js"></script>
 
- <script>       var $buoop = {required:{e:-4,f:-3,o:-3,s:-1,c:-3},insecure:true,unsupported:true,api:2018.05 };
+ <script> //Script affichant un message si le navigateur de l'utilisateur est dépassé.
+   var $buoop = {required:{e:-4,f:-3,o:-3,s:-1,c:-3},insecure:true,unsupported:true,api:2018.05 };
    function $buo_f(){
      var e = document.createElement("script");
      e.src = "//browser-update.org/update.min.js";
@@ -43,6 +44,7 @@ $cours = array(
 <header><h1><a href="index.php">Animations Interactives en Physique</a><?php if(isset($_GET['anim']) && isset($animations[$_GET['anim']])) {echo '<span class="small">'.$animations[$_GET['anim']]['titre'].'</span>';}?></h1></header>
 <main>
 <?php
+//Si $_GET['anim'] est défini (querystring), afficher l'animation demandée, sinon afficher une liste des animations existantes.
 if(isset($_GET['anim']) && isset($animations[$_GET['anim']])) {include($animations[$_GET['anim']]['chemin']);}
 else {
   foreach($cours as $code=>$titre) {
