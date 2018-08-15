@@ -10,11 +10,19 @@ header {
 header>h1 {
   margin: 0px;
   font-weight: 300;
+	color: white;
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: space-between;
 }
 
 header>h1>a, header>h1>a:visited {
   color: white;
   text-decoration: none;
+}
+
+header>h1>.small {
+	font-size: 80%;
 }
 
 h2 {

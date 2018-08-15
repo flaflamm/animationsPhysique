@@ -40,7 +40,7 @@ $cours = array(
 </head>
 
 <body>
-<header><h1><a href="index.php">Animations Interactives en Physique</a></h1></header>
+<header><h1><a href="index.php">Animations Interactives en Physique</a><?php if(isset($_GET['anim']) && isset($animations[$_GET['anim']])) {echo '<span class="small">'.$animations[$_GET['anim']]['titre'].'</span>';}?></h1></header>
 <main>
 <?php
 if(isset($_GET['anim']) && isset($animations[$_GET['anim']])) {include($animations[$_GET['anim']]['chemin']);}
