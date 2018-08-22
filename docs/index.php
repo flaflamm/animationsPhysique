@@ -58,6 +58,7 @@ else {
 
  ?>
 </main>
+<footer><a href='http://www.cegep-ste-foy.qc.ca'><img src='utils/logocsf.svg'></a></footer>
 
 </body>
 </html>
