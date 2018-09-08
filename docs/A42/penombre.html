@@ -58,19 +58,26 @@
     object.radius(rO);
     object.cx(xO);
 
-		//Ajuste le tracé des rayons.
-    var rayonOmbre = rS + (xE-xS)*(rO-rS)/(xO-xS);
-    var rayonPenombre = -rS + (xE-xS)*(rO+rS)/(xO-xS);
-    ray1.plot([[xS, 250-rS], [xE, 250 - rayonOmbre]]);
-    ray2.plot([[xS, 250-rS], [xE, 250 + rayonPenombre]]);
-    ray3.plot([[xS, 250+rS], [xE, 250 + rayonOmbre]]);
-    ray4.plot([[xS, 250+rS], [xE, 250 - rayonPenombre]]);
+		//Ajuste le tracé des rayons (amélioré).
+		var theta = Math.asin((rO-rS)/(xO-xS)); //Angle des rayons qui ne se croisent pas entre la source et l'objet
+		var xi = xS-rS*Math.sin(theta);
+		var deltayi = rS*Math.cos(theta);
+		var rayonOmbre = deltayi+(xE-xi)*Math.tan(theta);
+		ray1.plot([[xi, 250-deltayi], [xE, 250 - rayonOmbre]]);
+		ray2.plot([[xi, 250+deltayi], [xE, 250 + rayonOmbre]]);
+
+		theta = Math.asin((rO+rS)/(xO-xS)); //Angle des rayons qui se croisent entre la source et l'objet
+		xi = xS+rS*Math.sin(theta);
+		deltayi = rS*Math.cos(theta);
+		var rayonPenombre = -deltayi+ (xE-xi)*Math.tan(theta);
+		ray3.plot([[xi, 250-deltayi], [xE, 250 + rayonPenombre]]);
+		ray4.plot([[xi, 250+deltayi], [xE, 250 - rayonPenombre]]);
 
 		//Redessine l'image
     image.radius(rayonPenombre/2,rayonPenombre);
     if(rayonOmbre>0) { imageGradient.update(function(stop) {stop.at({ offset: 0, color: '#23', opacity: 1 }), stop.at({ offset: rayonOmbre/rayonPenombre, color: '#23', opacity: 1 }), stop.at({ offset: 1, color: '#23', opacity: 0 }) }); }
     else {
-      var maxOpacity = 1+rayonOmbre/rayonPenombre;
+      var maxOpacity = (1+rayonOmbre/rayonPenombre)*(1+rayonOmbre/rayonPenombre);
       imageGradient.update(function(stop) {stop.at({ offset: 0, color: '#23', opacity: maxOpacity }), stop.at({ offset: -rayonOmbre/rayonPenombre, color: '#23', opacity: maxOpacity }), stop.at({ offset: 1, color: '#23', opacity: 0 }) });
     }
 
@@ -80,7 +87,8 @@
       oeil.opacity(1).y(yOeil+250).rotate(yOeil/15);
       vue.opacity(1);
       vueSource.radius(rS);
-      vueObject.radius(rO*(xE-xS)/(xE-xO)).cy(250-yOeil*((xE-xS)/(xE-xO)-1));
+			var rVueO = rO*(xE+10-xS)/(xE+10-xO);
+      vueObject.radius(rVueO).cy((rS+rVueO)*yOeil/(-deltayi+ (xE+10-xi)*Math.tan(theta))+250);
       document.getElementById('observateurPositionControl').style.display = 'block';
     }
     else {oeil.opacity(0); vue.opacity(0); document.getElementById('observateurPositionControl').style.display = 'none';}
