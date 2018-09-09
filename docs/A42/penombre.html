@@ -88,7 +88,7 @@
       vue.opacity(1);
       vueSource.radius(rS);
 			var rVueO = rO*(xE+10-xS)/(xE+10-xO);
-      vueObject.radius(rVueO).cy((rS+rVueO)*yOeil/(-deltayi+ (xE+10-xi)*Math.tan(theta))+250);
+    	vueObject.radius(rVueO).cy((rS+rVueO)*yOeil/(deltayi-(xE+10-xi)*Math.tan(theta))+250);
       document.getElementById('observateurPositionControl').style.display = 'block';
     }
     else {oeil.opacity(0); vue.opacity(0); document.getElementById('observateurPositionControl').style.display = 'none';}
