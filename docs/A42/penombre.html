@@ -12,6 +12,7 @@
   </div>
 </div>
 
+<script src='utils/includes/vector.js'></script>
 <script>
   //Création de l'élément svg (l'image).
   var draw = SVG('penombre').viewbox({ x: 0, y: 0, width: 1000, height: 500 });
@@ -26,10 +27,10 @@
   var imageGradient = draw.gradient('radial', function(stop) { stop.at(0, 'white'), stop.at(1, 'white') });
   var image = draw.ellipse(1, 2).attr({cx:700, cy:250}).fill(imageGradient).maskWith(ecran.clone());
 
-  var ray1 = draw.line(80, 250, 700, 250).stroke({ width: 1 });
-  var ray2 = draw.line(80, 250, 700, 250).stroke({ width: 1 });
-  var ray3 = draw.line(80, 250, 700, 250).stroke({ width: 1 });
-  var ray4 = draw.line(80, 250, 700, 250).stroke({ width: 1 });
+  var ray1 = draw.polyline('80, 250, 700, 250').stroke({ width: 1 });
+  var ray2 = draw.polyline('80, 250, 700, 250').stroke({ width: 1 });
+  var ray3 = draw.polyline('80, 250, 700, 250').stroke({ width: 1 });
+  var ray4 = draw.polyline('80, 250, 700, 250').stroke({ width: 1 });
 
   var oeil = draw.group().x(720).y(250);
   oeil.path("M 10,20 c -10,-10 -10,-30 0,-40 l 30,20 Z").fill('white').stroke({ width: 1, color: 'black' });
@@ -63,15 +64,15 @@
 		var xi = xS-rS*Math.sin(theta);
 		var deltayi = rS*Math.cos(theta);
 		var rayonOmbre = deltayi+(xE-xi)*Math.tan(theta);
-		ray1.plot([[xi, 250-deltayi], [xE, 250 - rayonOmbre]]);
-		ray2.plot([[xi, 250+deltayi], [xE, 250 + rayonOmbre]]);
+		ray1.plot([[xi, 250-deltayi], [xE, 250 - rayonOmbre]]).ray({size:1.5});
+		ray2.plot([[xi, 250+deltayi], [xE, 250 + rayonOmbre]]).ray({size:1.5});
 
 		theta = Math.asin((rO+rS)/(xO-xS)); //Angle des rayons qui se croisent entre la source et l'objet
 		xi = xS+rS*Math.sin(theta);
 		deltayi = rS*Math.cos(theta);
 		var rayonPenombre = -deltayi+ (xE-xi)*Math.tan(theta);
-		ray3.plot([[xi, 250-deltayi], [xE, 250 + rayonPenombre]]);
-		ray4.plot([[xi, 250+deltayi], [xE, 250 - rayonPenombre]]);
+		ray3.plot([[xi, 250-deltayi], [xE, 250 + rayonPenombre]]).ray({size:1.5});
+		ray4.plot([[xi, 250+deltayi], [xE, 250 - rayonPenombre]]).ray({size:1.5});
 
 		//Redessine l'image
     image.radius(rayonPenombre/2,rayonPenombre);
