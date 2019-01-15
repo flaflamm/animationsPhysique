@@ -69,6 +69,10 @@ a, a:visited {
   padding-bottom: 50%;
 }
 
+.imageContainer.aspectRation4-1 {
+  padding-bottom: 25%;
+}
+
 @media (min-aspect-ratio: 2/1) {
   .imageContainer.aspectRation2-1 {
     width: 80%;

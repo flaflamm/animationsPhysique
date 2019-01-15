@@ -1,0 +1,44 @@
+<div class="imageContainer aspectRation4-1"><div id="accelerateur"></div></div>
+
+<div class="controls">
+  <label for="sourceTaille">Taille de la source:&nbsp;<input type="range" id="sourceTaille" name="sourceTaille" value="20" max="50" min="0" step="0.1" oninput="redraw()" onchange="redraw()"></label>
+  <div class='controlGroup'>
+    <label for="objetTaille">Taille de l'objet:&nbsp;<input type="range" id="objetTaille" name="objetTaille" value="15" max="50" min="10"  step="0.1" oninput="redraw()" onchange="redraw()"></label><br>
+    <label for="objetPosition">Position de l'objet:&nbsp;<input type="range" id="objetPosition" name="objetPosition" value="450" max="600" min="300" step="0.1" oninput="redraw()" onchange="redraw()"></label>
+  </div>
+  <div class='controlGroup'>
+    <label for="observateur">Observateur visible:&nbsp;<input type="checkbox" class="switch" id="observateur" name="observateur" oninput="redraw()" onchange="redraw()"></label><br>
+    <label for="observateurPosition" style="display:none;" id="observateurPositionControl">Position de l'observateur:&nbsp;<input type="range" id="observateurPosition" name="observateurPosition" value="50" max="180" min="-180" step="0.1"  oninput="redraw()" onchange="redraw()"></label>
+  </div>
+</div>
+
+<script src='utils/includes/vector.js'></script>
+<script>
+  //Création de l'élément svg (l'image).
+  var draw = SVG('accelerateur').viewbox({ x: 0, y: 0, width: 800, height: 200 });
+
+	//Création des différents éléments de l'image
+	var tubeBackgroundGradient = draw.gradient('linear', function(stop) {
+		stop.at(0, '#9A5715')
+		stop.at(0.15, '#FFBF7D')
+		stop.at(0.25, '#b87333')
+		stop.at(0.55, '#5A320A')
+		stop.at(0.75, '#704418')
+		stop.at(0.9, '#E1801F')
+	  stop.at(1, '#9A5715')
+	}).from(0, 0).to(0, 1);
+
+	var sectionGradient = draw.gradient('radial', function(stop){
+		stop.at(0.5, '#b87333')
+		stop.at(1, '#5A320A')
+	}).scale(2,1.35).attr({cx: 0.5, cy:0.3, fx:0.5, fy:0.5});
+
+	var tube = draw.group();
+	tube.path('M75 50 H750 A25 50 0 0 0 750 150 H75 A 25 50 0 1 1 75 50' ).fill(tubeBackgroundGradient);//.stroke({ width: 0.5, color: '#000' });
+	for(var i=0; i<=5; i++) {
+		tube.path('M'+(75+135*i)+' 50 v30 a10 20 0 0 0 0 40 v30 a25 50 0 1 1 0 -100').fill(sectionGradient);//.stroke({ width: 0.5, color: '#000' });
+	}
+
+	var wave = draw.path('M0 100 q 135 30 270 0 t 270 0 t 270 0').stroke({width: 1, color: '#69F'}).fill('none');
+
+</script>
