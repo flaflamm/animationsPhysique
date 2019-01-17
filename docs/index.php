@@ -3,6 +3,7 @@
 $animations = array(
   'penombre'=>array('titre'=>'Ombre & Pénombre', 'cours'=>'A42', 'chemin'=>'A42/penombre.html'),
 	'accerateurLineaire'=>array('titre'=>'Accélérateur Linéaire', 'cours'=>'C42', 'chemin'=>'C42/accelerateurLineaire.html'),
+	'resistanceEcoulement'=>array('titre'=>'Résistance à l\'écoulement dans un orifice', 'cours'=>'143', 'chemin'=>'143/resistanceEcoulement.html'),
   //'ombre'=>array('titre'=>'Ombre & Pénombre', 'cours'=>'A42', 'chemin'=>'A42/penombre.html')
 );
 
@@ -11,6 +12,7 @@ $cours = array(
   'NYA'=>'Mécanique',
   'NYB'=>'Électricité & Magnétisme',
   'NYC'=>'Ondes & Physique Moderne',
+	'143'=>'Principes physiques des appareils d\'inhalothérapie',
   'A42'=>'Phénomènes Physique (Radiodiagnostic)',
 	'C42'=>'Phénomènes Physique (Radio-oncologie)'
 );
