@@ -1,7 +1,7 @@
 <div class="imageContainer aspectRation2-1"><div id="orbite"></div></div>
 
 <div class="controls">
-  <label for="masseCentre">Masse de l'objet central:&nbsp;<input type="range" id="masseCentre" name="masseCentre" value="50" max="65" min="35" step="0.2" oninput="redraw()" onchange="redraw()"></label>
+  <label for="masseCentre">Masse de l'objet central:&nbsp;<input type="range" id="masseCentre" name="masseCentre" value="30" max="40" min="24" step="0.2" oninput="redraw()" onchange="redraw()"></label>
   <button type="button" oninput="redraw()">Click Me!</button>
   </div>
 </div>
@@ -9,7 +9,7 @@
 <script src='utils/includes/vector.js'></script>
 <script>
   //Paramètres fudge-factor pour aider à créer une animation satisfaisante
-  var constanteG = 125;
+  var constanteG = 1000;
   
   //Paramètres de la masse centrale; positions en coordonnées absolues
   var solX = 500;
@@ -18,7 +18,7 @@
   //Paramètres du satellite; positions en coordonnées absolues
   var posX = 800;
   var posY = 250;
-  var vitesseX = 0.0;  var vitesseY = -3;
+  var vitesseX = 0.0;  var vitesseY = -9;
   var accX = 0.0;  var accY = 0.0;
   
   //Création de l'élément svg (l'image).
@@ -30,7 +30,7 @@
   
  
 	//Redessine l'image en tenant compte des contrôles externes
-  redraw();
+  var partLeBal = setInterval(redraw,10);
 
   function redraw() {
 		//Définit et récupère les valeurs nécessaires à l'image.
@@ -49,12 +49,14 @@
 	var accX = -(locX / dist) * acc;
 	var accY = -(locY / dist) * acc;
 	
-	//Algorithme Euler-Cromer, la position est modifiée avant la vitesse
+	//Algorithme Euler, la vitesse est modifiée avant la position
+	vitesseX += accX;
+	vitesseY += accY;
+	
+	
 	locX += vitesseX;
 	locY += vitesseY;
 	
-	vitesseX += accX;
-	vitesseY += accY;
 	
 	//Rafraichit les positions en coordonnées globales et redessine le satellite
 	posX = globalX(locX);
