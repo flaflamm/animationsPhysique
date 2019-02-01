@@ -8,6 +8,9 @@
 
 <script src='utils/includes/vector.js'></script>
 <script>
+  //Paramètres fudge-factor pour aider à créer une animation satisfaisante
+  var constanteG = 125;
+  
   //Paramètres de la masse centrale; positions en coordonnées absolues
   var solX = 500;
   var solY = 250;
@@ -15,7 +18,7 @@
   //Paramètres du satellite; positions en coordonnées absolues
   var posX = 800;
   var posY = 250;
-  var vitesseX = 0.0;  var vitesseY = 1.0;
+  var vitesseX = 0.0;  var vitesseY = -3;
   var accX = 0.0;  var accY = 0.0;
   
   //Création de l'élément svg (l'image).
@@ -35,31 +38,48 @@
 	//Ajuste les rayons de la source et de l'objet et la position de l'objet.
     masseCentre.radius(rC);
 
-	var distAuCarre = localX(posX)*localX(posX) + localY(posY)*localY(posY);
+	var locX = localX(posX);
+	var locY = localY(posY);
+
+	var distAuCarre = locX*locX + locY*locY;
 	var dist = Math.sqrt(distAuCarre);
-	var acc = 10 * rC * 1.0 / distAuCarre;
-	var accX = -(localX(posX) / dist) * acc;
-	var accY = -(localY(posY) / dist) * acc;
+	
+	var acc = constanteG * rC * 1.0 / distAuCarre;
+	
+	var accX = -(locX / dist) * acc;
+	var accY = -(locY / dist) * acc;
 	
 	//Algorithme Euler-Cromer, la position est modifiée avant la vitesse
-	posX += vitesseX;
-	posY += vitesseY;
+	locX += vitesseX;
+	locY += vitesseY;
 	
 	vitesseX += accX;
 	vitesseY += accY;
 	
-	masseSat.cx(posX);
-	masseSat.cy(posY);
+	//Rafraichit les positions en coordonnées globales et redessine le satellite
+	posX = globalX(locX);
+	posY = globalY(locY);
+	masseSat.cx(posX).cy(posY);
   }
   
-  function localX(screenX){
-		var globalX = screenX - solX;
-		return globalX;
+  function localX(globalX){
+		var retVal = globalX - solX;
+		return retVal;
   }
   
-  function  localY(screenY){
-		var globalY = posY - screenY;
-		return globalY;
+  function  localY(globalY){
+		var retVal = solY - globalY;
+		return retVal;
+  }
+  
+  function globalX(localX){
+		var retVal = localX + solX;
+		return retVal;
+  }
+  
+  function globalY(localY){
+		var retVal = solY - localY;
+		return retVal;
   }
 
 </script>
