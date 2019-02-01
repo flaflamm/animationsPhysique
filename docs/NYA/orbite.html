@@ -1,32 +1,65 @@
 <div class="imageContainer aspectRation2-1"><div id="orbite"></div></div>
 
 <div class="controls">
-  <label for="masseCentre">Masse de l'objet central:&nbsp;<input type="range" id="masseCentre" name="masseCentre" value="100" max="110" min="90" step="0.2" oninput="redraw()" onchange="redraw()"></label>
+  <label for="masseCentre">Masse de l'objet central:&nbsp;<input type="range" id="masseCentre" name="masseCentre" value="50" max="65" min="35" step="0.2" oninput="redraw()" onchange="redraw()"></label>
+  <button type="button" oninput="redraw()">Click Me!</button>
   </div>
 </div>
 
 <script src='utils/includes/vector.js'></script>
 <script>
+  //Paramètres de la masse centrale; positions en coordonnées absolues
+  var solX = 500;
+  var solY = 250;
+  
+  //Paramètres du satellite; positions en coordonnées absolues
+  var posX = 800;
+  var posY = 250;
+  var vitesseX = 0.0;  var vitesseY = 1.0;
+  var accX = 0.0;  var accY = 0.0;
+  
   //Création de l'élément svg (l'image).
   var draw = SVG('orbite').viewbox({ x: 0, y: 0, width: 1000, height: 500 });
   
   //Création des différents éléments de l'image
-  var masseCentre = draw.circle(1).attr({ cx: 500, cy: 250, fill: '#ffffff' });
-  var masseSat = draw.circle(1).attr({ cx: 800, cy: 0, fill: '#ffffff' });
-  var vitesseX = 0.0;
-  var vitesseY = -5.0;
+  var masseCentre = draw.circle(1).attr({ cx: solX, cy: solY, fill: '#ffffff' });
+  var masseSat = draw.circle(15).attr({ cx: posX, cy: posY, fill: '#ffffff' });
   
-
+ 
 	//Redessine l'image en tenant compte des contrôles externes
   redraw();
 
   function redraw() {
 		//Définit et récupère les valeurs nécessaires à l'image.
     var rC = parseFloat(document.getElementById("masseCentre").value);
-
 	//Ajuste les rayons de la source et de l'objet et la position de l'objet.
     masseCentre.radius(rC);
 
+	var distAuCarre = localX(posX)*localX(posX) + localY(posY)*localY(posY);
+	var dist = Math.sqrt(distAuCarre);
+	var acc = 10 * rC * 1.0 / distAuCarre;
+	var accX = -(localX(posX) / dist) * acc;
+	var accY = -(localY(posY) / dist) * acc;
+	
+	//Algorithme Euler-Cromer, la position est modifiée avant la vitesse
+	posX += vitesseX;
+	posY += vitesseY;
+	
+	vitesseX += accX;
+	vitesseY += accY;
+	
+	masseSat.cx(posX);
+	masseSat.cy(posY);
+  }
+  
+  function localX(screenX){
+		var globalX = screenX - solX;
+		return globalX;
+  }
+  
+  function  localY(screenY){
+		var globalY = posY - screenY;
+		return globalY;
   }
 
 </script>
