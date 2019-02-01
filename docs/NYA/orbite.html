@@ -9,26 +9,13 @@
 <script>
   //Création de l'élément svg (l'image).
   var draw = SVG('orbite').viewbox({ x: 0, y: 0, width: 1000, height: 500 });
-
+  
   //Création des différents éléments de l'image
   var masseCentre = draw.circle(1).attr({ cx: 500, cy: 250, fill: '#ffffff' });
-
-  var ray1 = draw.polyline('80, 250, 700, 250').stroke({ width: 1 });
-  var ray2 = draw.polyline('80, 250, 700, 250').stroke({ width: 1 });
-  var ray3 = draw.polyline('80, 250, 700, 250').stroke({ width: 1 });
-  var ray4 = draw.polyline('80, 250, 700, 250').stroke({ width: 1 });
-
-  var oeil = draw.group().x(720).y(250);
-  oeil.path("M 10,20 c -10,-10 -10,-30 0,-40 l 30,20 Z").fill('white').stroke({ width: 1, color: 'black' });
-  oeil.path("M 10,20 c -4,2 -8,6 -10,10").fill('transparent').stroke({ width: 1, color: 'black' });
-  oeil.path("M 10,-20 c -4,-2 -8,-6 -10,-10").fill('transparent').stroke({ width: 1, color: 'black' });
-  oeil.path("M 4,10 c -6,-6 -6,-14 0,-20 c 4,4 4,16 0,20").fill('#68F').stroke({ width: 1, color: 'black' });
-  oeil.path("M 1,5 c -2,-2 -2,-8 0,-10 c 1,1 1,9 0,10").fill('black').stroke({ width: 1, color: 'black' });
-
-  var vue = draw.group();
-  masque = vue.rect(160,420).x(820).y(40).fill('white');
-  vueSource = vue.circle(150).fill('#ff6').cx(900).cy(250);
-  vueObject = vue.circle(100).fill('#116').cx(900).maskWith(masque);
+  var masseSat = draw.circle(1).attr({ cx: 800, cy: 0, fill: '#ffffff' });
+  var vitesseX = 0.0;
+  var vitesseY = -5.0;
+  
 
 	//Redessine l'image en tenant compte des contrôles externes
   redraw();
