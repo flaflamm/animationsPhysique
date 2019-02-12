@@ -12,19 +12,23 @@ utilisant simplement leur nom.
 
 var copper = new SVG.Color('#b87333');
 var lightCopper = new SVG.Color('#cc7c33');
-var ultraLightCopper = new SVG.Color('#ffbc7f');
+var lighterCopper = new SVG.Color('#e58833');
+var lightestCopper = new SVG.Color('#ffbc7f');
 var darkCopper = new SVG.Color('#9a5515');
 var darkerCopper = new SVG.Color('#7f4a19');
+var darkestCopper = new SVG.Color('#663100');
+
 
 /**********************************
 Pour utiliser les gradients, if faut d'abord
-les définir dans le document en utilisant:
+les définir dans le document en utilisant:#b87333
 draw.svg(vPipe); ou draw.svg(hPipe);
 Ensuite, un élément pourra l'utiliser:
 "url(#vPipe)" ou "url(#hPipe)" dans un fill.
 **********************************/
 
 var hPipe = "<linearGradient id='hPipe' x1='0%' y1='0%' x2='0%' y2='100%'><stop offset='0%' style='stop-color:#b87333;stop-opacity:1'/><stop offset='32%' style='stop-color:#ffbc7f;stop-opacity:1'/><stop offset='45%' style='stop-color:#7f4a19;stop-opacity:1'/><stop offset='67%' style='stop-color:#cc7c33;stop-opacity:1'/><stop offset='100%' style='stop-color:#9a5515;stop-opacity:1'/></linearGradient>";
+var hPipeInt = "<linearGradient id='hPipeInt' x1='0%' y1='0%' x2='0%' y2='100%'><stop offset='0%' style='stop-color:#663100;stop-opacity:1'/><stop offset='32%' style='stop-color:#cc7c33;stop-opacity:1'/><stop offset='52%' style='stop-color:#9a5515;stop-opacity:1'/><stop offset='66%' style='stop-color:#ffbc7f;stop-opacity:1'/><stop offset='100%' style='stop-color:#7f4a19;stop-opacity:1'/></linearGradient>";
 var vPipe = "<linearGradient id='vPipe' x1='0%' y1='0%' x2='100%' y2='0%'><stop offset='0%' style='stop-color:#b87333;stop-opacity:1'/><stop offset='32%' style='stop-color:#ffbc7f;stop-opacity:1'/><stop offset='45%' style='stop-color:#7f4a19;stop-opacity:1'/><stop offset='67%' style='stop-color:#cc7c33;stop-opacity:1'/><stop offset='100%' style='stop-color:#9a5515;stop-opacity:1'/></linearGradient>";
 
 /********************************************
@@ -72,12 +76,13 @@ SVG.Threads = SVG.invent({
 
 					 this.path('M 0 '+(y0+d)+' v'+(w-d)+' l'+d+' '+(-d)+' z').attr({fill: "url(#threadGradient2)"});
 
-					 for(var i=0; i<2*threads; i++) {
+					 for(var i=0; i<2*threads-1; i++) {
 						 if(i % 2 == 0) { this.path('M'+(d*i)+' '+(y0+d)+' l'+d+' '+(w-2*d)+' l'+d+' '+d+' l'+(-d)+' '+(-w)+' z').attr({fill: "url(#threadGradient1)"}); }
 						 else { this.path('M'+(d*i)+' '+y0+' l'+d+' '+(w)+' l'+d+' '+(-d)+' l'+(-d)+' -'+(w-2*d)+' z').attr({fill: "url(#threadGradient2)"}); }
 					 }
 
-					 this.path('M'+(d*i)+' '+(y0+d)+' l'+d+' '+(w-2*d)+' v'+(-w+d)+' z').attr({fill: "url(#threadGradient1)"});
+					 this.path('M'+(d*i)+' '+y0+' l'+d+' '+(d)+' v'+(w-2*d)+' z').attr({fill: "url(#threadGradient2)"});
+					 
 
 					 return this;
 				 }

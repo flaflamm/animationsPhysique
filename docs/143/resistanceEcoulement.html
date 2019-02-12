@@ -1,38 +1,214 @@
-<div class="imageContainer aspectRation2-1"><div id="resistanceEcoulement"></div></div>
+<div id="imageContainer" class="aspectRation2-1"><div id="resistanceEcoulement"></div></div>
 
 <div class="controls">
+	<div class="details open">
+		<h2 class="detailsAlwaysVisible" onclick="redraw('intro');">Introduction</h2>
+		<p class="detailsToHide">On appelle un orifice un élément dont la longueur est plus petite que le diamètre de l'ouverture par opposition à un tube qui sera plus long que le diamètre de son ouverture.</p>
+		<p class="detailsToHide">Pour un tube, l'écoulement dépend de la viscosité du fluide alors que pour un orifice c'est la densité du fluide qui est importante.</p>
+		<p class="detailsToHide">Dans l'équation du débit d'un fluide par un orifice, le carré du débit ($Q$) est proportionnel au carré de l'aire de l'orifice ($A$), proportionnel à la différence de pression ($ΔP$) et inversement proportionnel à la densité ($ρ$). L'équation comporte aussi un facteur de proportionnalité ($k$). $$Q^2 = {{k A^2 \Delta P} \over \rho}$$</p>
+		<label for="ouvertureDiameter">Diamètre de l'ouverture:&nbsp;<input type="range" id="ouvertureDiameter" name="ouvertureDiameter" value="30" max="50" min="15" step="0.1" oninput="redraw()" onchange="redraw()"></label>
+		<label for="deltaPression">Variation de la pression:&nbsp;<input type="range" id="deltaPression" name="deltaPression" value="10" max="20" min="5" step="0.1" oninput="redraw()" onchange="redraw()"></label>
+		<label for="densite">Densité du gaz:&nbsp;<input type="range" id="densite" name="densite" value="1" max="2" min="0.5" step="0.05" oninput="redraw()" onchange="redraw()"></label>
+
+		<h2 class="detailsAlwaysVisible" onclick="redraw('debit');">Influence du débit</h2>
+		<p class="detailsToHide">On appelle un orifice un élément dont la longueur est plus petite que le diamètre de l'ouverture par opposition à un tube qui sera plus long que le diamètre de son ouverture.</p>
+		<p class="detailsToHide">Pour un tube, l'écoulement dépend de la viscosité du fluide alors que pour un orifice c'est la densité du fluide qui est importante.</p>
+		<p class="detailsToHide">Dans l'équation du débit d'un fluide par un orifice, le carré du débit ($Q$) est proportionnel au carré de l'aire de l'orifice ($A$), proportionnel à la différence de pression ($ΔP$) et inversement proportionnel à la densité ($ρ$). L'équation comporte aussi un facteur de proportionnalité ($k$). $$Q^2 = {{k A^2 \Delta P} \over \rho}$$</p>
+
+	</div>
+
+
+
+
+	<!--
   <label for="sourceTaille">Taille de la source:&nbsp;<input type="range" id="sourceTaille" name="sourceTaille" value="20" max="50" min="0" step="0.1" oninput="redraw()" onchange="redraw()"></label>
-  <div class='controlGroup'>
+  <div class='controlGroup'><script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML' async></script>
     <label for="objetTaille">Taille de l'objet:&nbsp;<input type="range" id="objetTaille" name="objetTaille" value="15" max="50" min="10"  step="0.1" oninput="redraw()" onchange="redraw()"></label><br>
     <label for="objetPosition">Position de l'objet:&nbsp;<input type="range" id="objetPosition" name="objetPosition" value="450" max="600" min="300" step="0.1" oninput="redraw()" onchange="redraw()"></label>
   </div>
   <div class='controlGroup'>
     <label for="observateur">Observateur visible:&nbsp;<input type="checkbox" class="switch" id="observateur" name="observateur" oninput="redraw()" onchange="redraw()"></label><br>
     <label for="observateurPosition" style="display:none;" id="observateurPositionControl">Position de l'observateur:&nbsp;<input type="range" id="observateurPosition" name="observateurPosition" value="50" max="180" min="-180" step="0.1"  oninput="redraw()" onchange="redraw()"></label>
-  </div>
+  </div> -->
 </div>
 
-<script src='utils/includes/pipes.js'></script>
+<script src='utils/includes/pipes.js?v=<?php echo mt_rand(); ?>'></script>
+<script src='utils/includes/vector.js?v=<?php echo mt_rand(); ?>'></script>
 <script>
   //Création de l'élément svg (l'image).
   var draw = SVG('resistanceEcoulement').viewbox({ x: 0, y: 0, width: 1000, height: 500 });
 
+	//Définition des paramètres par défaut du système.
+	var diameter = 30; //Diamètre de l'ouvertude
+	var dP = 10; //Variation de pression
+	var densite = 1; //Densité du gaz
+
+	//Chargement des gradients
 	draw.svg(vPipe);
 	draw.svg(hPipe);
+	draw.svg(hPipeInt);
 
- 	//Création des différents éléments de l'image
- 	var tube1 = draw.rect(200,120).attr({ x: 20, y: 60, fill: "url(#hPipe)"});
-	var fitting1 = draw.rect(150,150).attr({x:220, y:45, fill: darkCopper});
-	var threads1 = draw.threads({width:120, length:100, threads:6}).move(220,60);
+	/////////////////////////////////////////////////////////////////////
+ 	// Création des différents éléments de l'image pour l'introduction //
+	/////////////////////////////////////////////////////////////////////
+	var intro = draw.group();
 
-	var tube2 = draw.rect(40,150).attr({ x: 500, y: 200, fill: "url(#vPipe)"});
-	var fitting2 = draw.rect(150,150).attr({x:445, y:50, fill: darkCopper});
-	var threads2 = draw.threads({width:40, length:60, threads:8, outward:true}).move(500,200).rotate(270,0,0);
+	//Dessin du tube
+ 	intro.path('M 100 50 a 20 50 0 0 0 0 100 h 500 a 20 50 0 0 1 0 -100 z').attr({ fill: "url(#hPipe)"});
+  intro.path('M 600 50 a 20 50 0 0 0 0 100 a 20 50 0 0 0 0 -100 z').attr({ fill: darkestCopper});
+	intro.path('M 600 60 a 16 40 0 0 0 0 80 a 16 40 0 0 0 0 -80 z').attr({ fill: "url(#hPipeInt)"});
+
+	//Texte expliquant le tube
+	intro.text('Tube: ').font({size: '40'}).move(700,80).build(true).tspan('L').font({style: 'italic'}).tspan(' > ').font({style: 'normal'}).tspan('D').font({style: 'italic'})
+
+	//Longueur du tube
+	intro.text('L').font({size: '40', style: 'italic'}).move(320,170)
+	intro.line(100, 190, 300, 190).stroke({ width: 2, color: 'black' }).marker('start', 10, 10, function(add) {
+  	add.line(0,0,0,10).cx(5).stroke({ width: 1, color: 'black' })
+	})
+	intro.line(360, 190, 600, 190).stroke({ width: 2, color: 'black' }).marker('end', 10, 10, function(add) {
+  	add.line(0,0,0,10).cx(5).stroke({ width: 1, color: 'black' })
+	})
+
+	//Diamètre du tube
+	intro.text('D').font({size: '40', style: 'italic'}).move(33,75)
+	intro.line(50, 50, 50, 70).stroke({ width: 2, color: 'black' }).marker('start', 10, 10, function(add) {
+  	add.line(0,0,0,10).cx(5).stroke({ width: 1, color: 'black' })
+	})
+	intro.line(50, 125, 50, 150).stroke({ width: 2, color: 'black' }).marker('end', 10, 10, function(add) {
+  	add.line(0,0,0,10).cx(5).stroke({ width: 1, color: 'black' })
+	})
+
+	//Dessin du tube et un orifice
+	var tubeO = draw.group();
+	tubeO.path('M 100 300 v 10 h 500 v -10 z').attr({ fill: darkCopper});
+	tubeO.path('M 100 390 v 10 h 500 v -10 z').attr({ fill: darkCopper});
+	tubeO.path('M 600 300 v 10 a 16 40 0 0 1 0 80 v 10 a 20 50 0 0 0 0 -100 z').attr({ fill: darkestCopper});
+	tubeO.path('M 100 310 a 16 40 0 0 1 0 80 h 500 a 16 40 0 0 0 0 -80 z').attr({ fill: "url(#hPipeInt)"});
+	//Orifice
+	var ouvertureRight = tubeO.path('M 355 310 v '+(40-diameter/2)+' a '+(diameter/5)+' '+(diameter/2)+' 0 0 1 0 '+(diameter)+' v'+(40-diameter/2)+' a 16 40 0 0 0 0 -80 z').attr({ fill: darkestCopper});
+	var ouvertureTop = tubeO.path('M 355 310 h-10 v '+(40-diameter/2)+' h10 z').attr({ fill: darkCopper});
+	var ouvertureBottom = tubeO.path('M 355 390 h-10 v '+(-40+diameter/2)+' h10 z').attr({ fill: darkCopper});
+	var ouvertureBack = tubeO.path('M 345 '+(350-diameter/2)+' a '+(diameter/5)+' '+(diameter/2)+' 0 0 1 0 '+(diameter)+' h10 a '+(diameter/5)+' '+(diameter/2)+' 0 0 0 0 -'+(diameter)+' z').attr({ fill: darkerCopper});
+
+	//Texte expliquant l'orifice
+	intro.text('Orifice: ').font({size: '40'}).move(700,320).build(true).tspan('L').font({style: 'italic'}).tspan(' < ').font({style: 'normal'}).tspan('D').font({style: 'italic'})
+
+	//Longueur de l'orifice
+	intro.text('L').font({size: '40', style: 'italic'}).move(340,430)
+	intro.line(300,420, 342, 420).stroke({ width: 2, color: 'black' }).vector({size:1.5,position:'end',style:'mesure'})
+	intro.line(400,420, 358, 420).stroke({ width: 2, color: 'black' }).vector({size:1.5,position:'end',style:'mesure'})
+
+	//Diamètre de l'orifice
+	intro.text('D').font({size: '40', style: 'italic'}).move(20,330)
+	var quoteLine1 = intro.line(70,305, 70, 350-diameter/2).stroke({ width: 2, color: 'black' }).vector({size:1.5,position:'end',style:'mesure'})
+	var quoteLine2 = intro.line(70,395, 70, 350+diameter/2).stroke({ width: 2, color: 'black' }).vector({size:1.5,position:'end',style:'mesure'})
+
+	var path1 = tubeO.path('M 80 320 c 120 0 240 0 260 '+(8*(80-diameter)/25)+' s 120 -'+((80-diameter)/10)+' 160 -'+((80-diameter)/5)+' s 90 -'+(3*(80-diameter)/25)+' 120 -'+(3*(80-diameter)/25)).stroke('none').fill('none');
+	var matrix = path1.matrixify();
+	var path2 = tubeO.path('M 80 380 c 120 0 240 0 260 -'+(8*(80-diameter)/25)+' s 120 '+((80-diameter)/10)+' 160 '+((80-diameter)/5)+' s 90 '+(3*(80-diameter)/25)+' 120 '+(3*(80-diameter)/25)).stroke('none').fill('none');
+	var matrix2 = path2.matrixify();
+
+	var length = path1.length();
+
+	var tubeMask = draw.mask().add(draw.path('M 80 310 a 16 40 0 0 1 0 80 h 530 a 16 40 0 0 0 0 -80 z').fill({ color: '#fff' }))
+
+	SVG.easing['flow'] = function(t){
+		var A = diameter*diameter/2500; //Aire entre 0.09 et 1
+		var P = dP/20; //Pression entre 0.25 et 1
+		var D = densite*2; //Densité entre 1 et 4
+
+		var baseSpeed = A*Math.sqrt(P/D); //entre 0.0225 et 1
+		var slowestSpeed = baseSpeed*Math.sqrt(diameter/50);
+
+		var pos = [0, 0.2, 0.3, 0.4, 0.49-0.01*baseSpeed, 0.52+0.03*baseSpeed, 0.62+0.1*baseSpeed,1];
+		var speeds = [baseSpeed, 0.7*baseSpeed+0.3*slowestSpeed, 0.35*baseSpeed+0.65*slowestSpeed, slowestSpeed ]
+		var times = [0];
+		for(var i=0; i<speeds.length; i++) { times[i+1]=times[i]+(pos[i+1]-pos[i])/speeds[i]; }
+		var fastSpeed =
+
+		
+		//var d = (80 - diameter)/70;
+		//var pos   = [0, 0.3, 0.42, 0.48, 0.52, 0.62, 1];
+		//var times = [0, pos[1]+d*0.1, pos[2]+d*0.18, pos[3]+d*0.27, pos[4]+d*0.26, pos[5]+d*0.2, 1];
+
+		for(var i=1; i<pos.length; i++) {
+			if(t<times[i]) {
+				return ( (t-times[i-1]) * (pos[i]-pos[i-1]) / (times[i]-times[i-1]) + pos[i-1]);
+			}
+		}
+		return 1;
+
+	}
+
+	var particles=[], duree = 5000, particleN = 200;
+	for(var i=0; i<particleN; i++) {
+		particles[i] = tubeO.circle(2*Math.sqrt(densite)).fill('black').maskWith(tubeMask);
+
+		particles[i].randomX =  Math.random();
+		particles[i].randomY =  Math.random();
+
+		particles[i].animate(duree, 'flow',particles[i].randomX*duree).during(function(pos, morph, eased){
+			var p1 = new SVG.Point(path1.pointAt(eased * length)).transform(matrix);
+			var p2 = new SVG.Point(path2.pointAt(eased * length)).transform(matrix);
+			this.attr({ cx: p1.x, cy: this.randomY*p1.y+(1-this.randomY)*p2.y })
+		}).loop(true)
+	}
+
+
+
+	//Dessine le tube pour l'écoulement
+/*	var tube = draw.group();
+
+	var glassTube = draw.gradient('linear', function(stop) {
+	  stop.at({ offset: 0, color: '#9cf', opacity: 0.9 })
+		stop.at({ offset: 0.1, color: '#9cf', opacity: 0.9 })
+		stop.at({ offset: 0.1, color: '#9cf', opacity: 0.65 })
+		stop.at({ offset: 0.5, color: '#fff', opacity: 0.65 })
+		stop.at({ offset: 0.9, color: '#9cf', opacity: 0.65 })
+		stop.at({ offset: 0.9, color: '#9cf', opacity: 0.9 })
+		stop.at({ offset: 1, color: '#9cf', opacity: 0.9 })
+
+	})
+
+	var gaz = tube.rect(700,70).fill('white').move(50,30);
+	tube.rect(700,70).fill(glassTube.from(0, 0).to(0, 1)).move(50,30);
+	tube.path('M 150 100 v 80 a 100 100 0 0 0 200 0 v -80 h -30 v 80 a 70 70 0 0 1 -140 0 v -80 z').fill('#9cf');
+	tube.rect(70,30).fill(darkCopper).move(550,100);
+	tube.threads({width:40, length:30, threads:4, outward:true}).move(570,95).rotate(270);
+	tube.rect(40,20).fill('url(#vPipe)').move(565,130);
+	tube.circle(150).move(510,150).fill('#def').stroke({ width: 8, color: '#345' });
+	//var aiguille = tube.path()
+
+	var gaz2 = tube.rect(700,70).fill('white').move(50,363);
+	tube.rect(700,70).fill(glassTube.from(0, 0).to(0, 1)).move(50,363);
+	tube.path('M 150 433 v 80 a 100 100 0 0 0 200 0 v -80 h -30 v 80 a 70 70 0 0 1 -140 0 v -80 z').fill('#9cf');
+
+*/
 
 	//Redessine l'image en tenant compte des contrôles externes
   redraw();
 
-  function redraw() {
+  function redraw(part) {
+		//Récupère les valeurs de l'utilisateur
+		diameter = parseFloat(document.getElementById("ouvertureDiameter").value);
+		dP = parseFloat(document.getElementById("deltaPression").value);
+		radius = 2*Math.sqrt(parseFloat(document.getElementById("densite").value));
+
+		if(particles[0].radius()!=radius) {
+			for(var i=0; i<particles.length; i++) {particles[i].radius(radius);}
+		}
+
+		ouvertureRight.plot('M 355 310 v '+(40-diameter/2)+' a '+(diameter/5)+' '+(diameter/2)+' 0 0 1 0 '+(diameter)+' v'+(40-diameter/2)+' a 16 40 0 0 0 0 -80 z');
+		ouvertureTop.plot('M 355 310 h-10 v '+(40-diameter/2)+' h10 z');
+		ouvertureBottom.plot('M 355 390 h-10 v '+(-40+diameter/2)+' h10 z');
+		ouvertureBack.plot('M 345 '+(350-diameter/2)+' a '+(diameter/5)+' '+(diameter/2)+' 0 0 1 0 '+(diameter)+' h10 a '+(diameter/5)+' '+(diameter/2)+' 0 0 0 0 -'+(diameter)+' z');
+
+		path1.plot('M 80 320 c 120 0 240 0 260 '+(8*(80-diameter)/25)+' s 120 -'+((80-diameter)/10)+' 160 -'+((80-diameter)/5)+' s 90 -'+(3*(80-diameter)/25)+' 120 -'+(3*(80-diameter)/25));
+		path2.plot('M 80 380 c 120 0 240 0 260 -'+(8*(80-diameter)/25)+' s 120 '+((80-diameter)/10)+' 160 '+((80-diameter)/5)+' s 90 '+(3*(80-diameter)/25)+' 120 '+(3*(80-diameter)/25));
+
+		quoteLine1.plot(70,305, 70, 350-diameter/2);
+		quoteLine2.plot(70,395, 70, 350+diameter/2);
 
   }
 

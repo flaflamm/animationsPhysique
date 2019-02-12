@@ -31,6 +31,15 @@ $cours = array(
 
  <link href="utils/base.css" rel="stylesheet">
  <link href="utils/mainStyle.css?v=<?php echo mt_rand(); ?>" rel="stylesheet">
+
+ <!--MathJax pour les équations-->
+ <script type="text/x-mathjax-config">
+ MathJax.Hub.Config({
+   tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}
+ });
+ </script>
+ <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML' async></script>
+
  <script type="text/javascript" src="utils/svg.min.js"></script>
 
  <script> //Script affichant un message si le navigateur de l'utilisateur est dépassé.
