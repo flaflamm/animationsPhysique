@@ -2,7 +2,9 @@
 
 <div class="controls">
   <label for="masseCentre">Masse de l'objet central:&nbsp;<input type="range" id="masseCentre" name="masseCentre" value="30" max="40" min="24" step="0.2" oninput="redraw()" onchange="redraw()"></label>
-  <button type="button" oninput="redraw()">Click Me!</button>
+  <button type="button" onclick="redraw()">Click Me!</button>
+  <label for="vitesseTangentielle">Vitesse Tangentielle:&nbsp;<input type="checkbox" class="switch" id="vitesseTangentielle" name="vitesseTangentielle"></label><br>
+  </div><label for="trace">Trace d'orbite:&nbsp;<input type="checkbox" class="switch" id="trace" name="trace"></label><br>
   </div>
 </div>
 
@@ -10,6 +12,11 @@
 <script>
   //Paramètres fudge-factor pour aider à créer une animation satisfaisante
   var constanteG = 1000;
+  var maxTracesOrbite = 4;
+  var tracesOrbite = [];
+  var delayEnMs = 22;
+  var signet = 0;
+  
   
   //Paramètres de la masse centrale; positions en coordonnées absolues
   var solX = 500;
@@ -30,9 +37,14 @@
   
  
 	//Redessine l'image en tenant compte des contrôles externes
-  var partLeBal = setInterval(redraw,10);
+  var partLeBal = setInterval(redraw,delayEnMs);
+  
+	
+    var vitTan = draw.line(posX, posY, 10, 15).stroke({width: 1}).vector({size:4});
+	
 
   function redraw() {
+  
 		//Définit et récupère les valeurs nécessaires à l'image.
     var rC = parseFloat(document.getElementById("masseCentre").value);
 	//Ajuste les rayons de la source et de l'objet et la position de l'objet.
@@ -53,15 +65,32 @@
 	vitesseX += accX;
 	vitesseY += accY;
 	
-	
 	locX += vitesseX;
 	locY += vitesseY;
-	
 	
 	//Rafraichit les positions en coordonnées globales et redessine le satellite
 	posX = globalX(locX);
 	posY = globalY(locY);
 	masseSat.cx(posX).cy(posY);
+	
+	if(document.getElementById('vitesseTangentielle').checked) {
+		vitTan.plot(posX, posY, posX + 5*vitesseX, posY - 5*vitesseY);
+		vitTan.show();
+	} else{
+		vitTan.hide();
+	}
+	
+	if(document.getElementById('trace').checked) {
+	    var nouveauSat = draw.circle(15).attr({ cx: posX, cy: posY, fill: '#ffffff' });
+		if(signet == maxTracesOrbite) {
+			tracesOrbite.shift();
+			signet--;
+			tracesOrbite.length = Math.min(tracesOrbite.length, maxTracesOrbite);
+		}
+		tracesOrbite.add(nouveauSat);
+		signet++;
+		
+	}
   }
   
   function localX(globalX){
