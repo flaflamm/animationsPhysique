@@ -4,7 +4,7 @@
   <label for="masseCentre">Masse de l'objet central:&nbsp;<input type="range" id="masseCentre" name="masseCentre" value="30" max="40" min="24" step="0.2" oninput="redraw()" onchange="redraw()"></label>
   <button type="button" onclick="redraw()">Click Me!</button>
   <label for="vitesseTangentielle">Vitesse Tangentielle:&nbsp;<input type="checkbox" class="switch" id="vitesseTangentielle" name="vitesseTangentielle"></label><br>
-  </div><label for="trace">Trace d'orbite:&nbsp;<input type="checkbox" class="switch" id="trace" name="trace"></label><br>
+  <label for="trace">Trace d'orbite:&nbsp;<input type="checkbox" class="switch" id="trace" name="trace"></label><br>
   </div>
 </div>
 
@@ -27,21 +27,40 @@
   var posY = 250;
   var vitesseX = 0.0;  var vitesseY = -9;
   var accX = 0.0;  var accY = 0.0;
+
+  //Tentative de réunion des variables de cinematique du satellite sous le même chapiteau
+  var cin = {
+    "posX" : 800,
+    "posy" : 250,
+    "vitesseX" : 0.0,
+    "vitesseY" : -9.0,
+    "accX" : 0.0,
+    "accY" : 0.0
+  }
   
   //Création de l'élément svg (l'image).
   var draw = SVG('orbite').viewbox({ x: 0, y: 0, width: 1000, height: 500 });
   
   //Création des différents éléments de l'image
   var masseCentre = draw.circle(1).attr({ cx: solX, cy: solY, fill: '#ffffff' });
-  var masseSat = draw.circle(15).attr({ cx: posX, cy: posY, fill: '#ffffff' });
-  
- 
+
+  //Création de plusieurs Satellites en avance pour la fonctionalité de trace
+  //for(i=0; i < maxTracesOrbite; i++){
+  //  var masseSat = draw.circle(15).attr({ cx: posX, cy: posY, fill: '#ffffff' });
+  //  tracesOrbite.push(masseSat);
+  //}
+
+ var masseSat = draw.circle(15).attr({ cx: cin.posX, cy: cin.posY, fill: '#ffffff' });
+
 	//Redessine l'image en tenant compte des contrôles externes
   var partLeBal = setInterval(redraw,delayEnMs);
-  
-	
+
     var vitTan = draw.line(posX, posY, 10, 15).stroke({width: 1}).vector({size:4});
-	
+
+  function itereCinematique(cin){
+
+
+  }
 
   function redraw() {
   
