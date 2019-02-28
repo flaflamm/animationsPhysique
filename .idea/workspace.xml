@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="d5140c89-161c-487d-8bf2-dd7507a24bbc" name="Default" comment="trace fonctionne, mais n'est pas limitée&#10;tentative d'utiliser un json pour les données de cinématique">
+    <list default="true" id="d5140c89-161c-487d-8bf2-dd7507a24bbc" name="Default" comment="ENFIN DÉBUGUÉ!">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/docs/NYA/orbite.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/NYA/orbite.html" afterDir="false" />
     </list>
@@ -34,14 +34,14 @@
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
-          <entry key="html" value="3492" />
-          <entry key="txt" value="124" />
+          <entry key="html" value="5168" />
+          <entry key="txt" value="257" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
-          <entry key="HTML" value="3492" />
-          <entry key="PLAIN_TEXT" value="124" />
+          <entry key="HTML" value="5168" />
+          <entry key="PLAIN_TEXT" value="257" />
         </counts>
       </usages-collector>
     </session>
@@ -60,8 +60,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/docs/NYA/orbite.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="221">
-              <caret line="13" column="24" lean-forward="true" selection-start-line="13" selection-start-column="24" selection-end-line="13" selection-end-column="24" />
+            <state relative-caret-position="464">
+              <caret line="116" column="33" selection-start-line="116" selection-start-column="33" selection-end-line="116" selection-end-column="33" />
               <folding>
                 <element signature="e#569#575#0" expanded="true" />
               </folding>
@@ -80,6 +80,8 @@
     <findStrings>
       <find>signet</find>
       <find>rC</find>
+      <find>maxTracesOrbite</find>
+      <find>cinTraceOrbite</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -93,7 +95,8 @@
     </option>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="906" />
+    <option name="x" value="372" />
+    <option name="y" value="33" />
     <option name="width" value="1528" />
     <option name="height" value="1029" />
   </component>
@@ -261,11 +264,25 @@
       <option name="project" value="LOCAL" />
       <updated>1551373162257</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="les données sont maintenant dans une classe personalisée mais le satelitte crash dans le soleil!">
+      <created>1551378363878</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1551378363878</updated>
+    </task>
+    <task id="LOCAL-00005" summary="ENFIN DÉBUGUÉ!">
+      <created>1551385039958</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1551385039958</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="906" y="0" width="1528" height="1029" extended-state="0" />
+    <frame x="372" y="33" width="1528" height="1029" extended-state="0" />
     <editor active="true" />
     <layout>
       <window_info content_ui="combo" id="Project" order="0" weight="0.29495913" />
@@ -334,7 +351,9 @@
     <MESSAGE value="les fichiers!" />
     <MESSAGE value="trace fonctionne, mais n'est pas limitée" />
     <MESSAGE value="trace fonctionne, mais n'est pas limitée&#10;tentative d'utiliser un json pour les données de cinématique" />
-    <option name="LAST_COMMIT_MESSAGE" value="trace fonctionne, mais n'est pas limitée&#10;tentative d'utiliser un json pour les données de cinématique" />
+    <MESSAGE value="les données sont maintenant dans une classe personalisée mais le satelitte crash dans le soleil!" />
+    <MESSAGE value="ENFIN DÉBUGUÉ!" />
+    <option name="LAST_COMMIT_MESSAGE" value="ENFIN DÉBUGUÉ!" />
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/docs/index.php">
@@ -349,8 +368,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/docs/NYA/orbite.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="221">
-          <caret line="13" column="24" lean-forward="true" selection-start-line="13" selection-start-column="24" selection-end-line="13" selection-end-column="24" />
+        <state relative-caret-position="464">
+          <caret line="116" column="33" selection-start-line="116" selection-start-column="33" selection-end-line="116" selection-end-column="33" />
           <folding>
             <element signature="e#569#575#0" expanded="true" />
           </folding>

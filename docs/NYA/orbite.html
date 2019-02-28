@@ -113,8 +113,10 @@
 
 	//Met à jour les traces de l'orbite
 	for(i=0; i < maxTracesOrbite; i++){
-	      cinTraceOrbite[i] = itereCinematique(cinTraceOrbite[i]);
+	      if( i == signet) {
+	      cinTraceOrbite[i] = cin;
 		  gfxTraceOrbite[i].cx(cinTraceOrbite[i].x).cy(cinTraceOrbite[i].y);
+	      }
 
 		  if(document.getElementById('trace').checked) {
             gfxTraceOrbite[i].show();
@@ -122,7 +124,9 @@
 	        gfxTraceOrbite[i].hide();
 	        }
 		}
-	}
+		signet++;
+		if(signet > maxTracesOrbite - 1) signet = 0;
+	} // fin de redraw
   
   function localX(globalX){
 		var retVal = globalX - solX;
