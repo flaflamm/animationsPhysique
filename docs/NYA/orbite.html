@@ -21,22 +21,20 @@
   //Paramètres de la masse centrale; positions en coordonnées absolues
   var solX = 500;
   var solY = 250;
-  
-  //Paramètres du satellite; positions en coordonnées absolues
-  var posX = 800;
-  var posY = 250;
-  var vitesseX = 0.0;  var vitesseY = -9;
-  var accX = 0.0;  var accY = 0.0;
 
-  //Tentative de réunion des variables de cinematique du satellite sous le même chapiteau
-  var cin = {
-    "posX" : 800,
-    "posy" : 250,
-    "vitesseX" : 0.0,
-    "vitesseY" : -9.0,
-    "accX" : 0.0,
-    "accY" : 0.0
+  class Cinema{
+        constructor(x, y, vX, vY){
+        this.x = x;
+        this.y = y;
+        this.vX = vX;
+        this.vY = vY;
+        this.aX = 0.0;
+        this.aY = 0.0;
+        }
   }
+
+  //Classe contentant toutes les données de cinématique
+  var cin = new Cinema(800.0, 250.0, 0.0, 9.0);
   
   //Création de l'élément svg (l'image).
   var draw = SVG('orbite').viewbox({ x: 0, y: 0, width: 1000, height: 500 });
@@ -50,66 +48,53 @@
   //  tracesOrbite.push(masseSat);
   //}
 
- var masseSat = draw.circle(15).attr({ cx: cin.posX, cy: cin.posY, fill: '#ffffff' });
+    var masseSat = draw.circle(15).attr({ cx: cin.x, cy: cin.y, fill: '#ffffff' });
 
 	//Redessine l'image en tenant compte des contrôles externes
-  var partLeBal = setInterval(redraw,delayEnMs);
-
-    var vitTan = draw.line(posX, posY, 10, 15).stroke({width: 1}).vector({size:4});
-
-  function itereCinematique(cin){
+    var partLeBal = setInterval(redraw,delayEnMs);
+   // var vitTan = draw.line(cin.posX, cin.posY, 10, 15).stroke({width: 1}).vector({size:4});
 
 
-  }
+  function itereCinematique(cinema){
+    var ret = cinema;
 
-  function redraw() {
-  
-		//Définit et récupère les valeurs nécessaires à l'image.
+    //Définit et récupère les valeurs nécessaires à l'image.
     var rC = parseFloat(document.getElementById("masseCentre").value);
 	//Ajuste les rayons de la source et de l'objet et la position de l'objet.
     masseCentre.radius(rC);
+    var locX = localX(ret.x);
+	var locY = localY(ret.y);
 
-	var locX = localX(posX);
-	var locY = localY(posY);
-
-	var distAuCarre = locX*locX + locY*locY;
+    var distAuCarre = locX*locX + locY*locY;
 	var dist = Math.sqrt(distAuCarre);
-	
-	var acc = constanteG * rC * 1.0 / distAuCarre;
-	
-	var accX = -(locX / dist) * acc;
-	var accY = -(locY / dist) * acc;
-	
+    var acc = constanteG * rC * 1.0 / distAuCarre;
+
+	ret.aX = -(locX / dist) * acc;
+	ret.aY = -(locY / dist) * acc;
+
 	//Algorithme Euler, la vitesse est modifiée avant la position
-	vitesseX += accX;
-	vitesseY += accY;
-	
-	locX += vitesseX;
-	locY += vitesseY;
-	
+	ret.vX += ret.aX;
+	ret.vY += ret.aY;
+	locX += ret.vX;
+	locY += ret.vY;
+
 	//Rafraichit les positions en coordonnées globales et redessine le satellite
-	posX = globalX(locX);
-	posY = globalY(locY);
-	masseSat.cx(posX).cy(posY);
-	
+	ret.x = globalX(locX);
+	ret.y = globalX(locY);
+
+	return ret;
+  }
+
+  function redraw() {
+    cin = itereCinematique(cin);
+	masseSat.cx(cin.x).cy(cin.y);
+	//vitTan.plot(cin.x, cin.y, cin.x + 5*cin.vX, cin.y - 5*cin.vY);
 	if(document.getElementById('vitesseTangentielle').checked) {
-		vitTan.plot(posX, posY, posX + 5*vitesseX, posY - 5*vitesseY);
-		vitTan.show();
+		//vitTan.show();
 	} else{
-		vitTan.hide();
+		//vitTan.hide();
 	}
-	
-	if(document.getElementById('trace').checked) {
-	    var nouveauSat = draw.circle(15).attr({ cx: posX, cy: posY, fill: '#ffffff' });
-		if(signet == maxTracesOrbite) {
-			tracesOrbite.shift();
-			signet--;
-			tracesOrbite.length = Math.min(tracesOrbite.length, maxTracesOrbite);
-		}
-		tracesOrbite.add(nouveauSat);
-		signet++;
-		
-	}
+
   }
   
   function localX(globalX){
@@ -131,5 +116,7 @@
 		var retVal = solY - localY;
 		return retVal;
   }
+
+
 
 </script>
