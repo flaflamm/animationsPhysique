@@ -4,7 +4,7 @@ Développé le 2019-03-01 par Michaël Juneau
 But: Démontrer le déplacement des charges lors d'une charge par induction, avec ou sans une mise à la terre.
 -->
 
-<div class="imageContainer aspectRation2-1"><div id="chargeinduction"></div></div>
+<div id="imageContainer" class="aspectRation4-1"><div id="chargeinduction"></div></div>
 
 <div class="controls">
   <label for="axeTemps">Axe du temps:&nbsp;<input type="range" id="axeTemps" name="axeTemps" value="0" max="100" min="0" step="1"></label>
@@ -18,7 +18,9 @@ But: Démontrer le déplacement des charges lors d'une charge par induction, ave
   //Création de l'élément svg (l'image).
   var draw = SVG('chargeinduction').viewbox({ x: 0, y: 0, width: 1000, height: 500 });
 
-  var monPremierProton = draw.circle(50,50,20,20).charge('plus');
-  var monPremierElectron = draw.circle(300,300,20,20).charge('moins');
+  var monPremierProton = draw.circle(40).attr({ cx: 50, cy: 50, fill: '#ffffff' }).charge('plus');
+  var monPremierElectron = draw.circle(35).attr({ cx: 300, cy: 300, fill: '#0000ff' }).charge('moins');
+
+  draw();
 
 </script>
