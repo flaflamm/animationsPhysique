@@ -1,0 +1,24 @@
+<!--
+Développé le 2019-03-01 par Michaël Juneau
+
+But: Démontrer le déplacement des charges lors d'une charge par induction, avec ou sans une mise à la terre.
+-->
+
+<div class="imageContainer aspectRation2-1"><div id="chargeinduction"></div></div>
+
+<div class="controls">
+  <label for="axeTemps">Axe du temps:&nbsp;<input type="range" id="axeTemps" name="axeTemps" value="0" max="100" min="0" step="1"></label>
+  <button type="button" onclick="redraw()">Click Me!</button>
+  <label for="miseaterre">Utiliser une mise à terre:&nbsp;<input type="checkbox" class="switch" id="miseaterre" name="miseaterre"></label><br>
+</div>
+
+<script src='utils/includes/vector.js'></script>
+<script src='utils/includes/charge.js'></script>
+<script>
+  //Création de l'élément svg (l'image).
+  var draw = SVG('chargeinduction').viewbox({ x: 0, y: 0, width: 1000, height: 500 });
+
+  var monPremierProton = draw.circle(50,50,20,20).charge('plus');
+  var monPremierElectron = draw.circle(300,300,20,20).charge('moins');
+
+</script>

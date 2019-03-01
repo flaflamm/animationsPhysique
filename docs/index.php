@@ -4,7 +4,8 @@ $animations = array(
   'penombre'=>array('titre'=>'Ombre & Pénombre', 'cours'=>'A42', 'chemin'=>'A42/penombre.html'),
 	'accerateurLineaire'=>array('titre'=>'Accélérateur Linéaire', 'cours'=>'C42', 'chemin'=>'C42/accelerateurLineaire.html'),
 	'resistanceEcoulement'=>array('titre'=>'Résistance à l\'écoulement dans un orifice', 'cours'=>'143', 'chemin'=>'143/resistanceEcoulement.html'),
-  //'ombre'=>array('titre'=>'Ombre & Pénombre', 'cours'=>'A42', 'chemin'=>'A42/penombre.html')
+  'chargeinduction'=>array('titre'=>'Charge par induction', 'cours'=>'NYB', 'chemin'=>'NYB/chargeinduction.html'),
+    //'ombre'=>array('titre'=>'Ombre & Pénombre', 'cours'=>'A42', 'chemin'=>'A42/penombre.html')
 );
 
 //Liste des cours : code=>titre
