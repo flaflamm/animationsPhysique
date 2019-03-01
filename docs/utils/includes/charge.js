@@ -2,7 +2,7 @@
 
 //Classe pour générer des symboles de charge, version +, - ou 0.
 
-SVG.invent(SVG.Circle, {
+SVG.extend(SVG.Circle, {
   charge: function({signe='plus'}={signe:'plus'}) {
   	if(signe==='plus') {
       //TODO trouver comment ajouter les signes avec des lines
