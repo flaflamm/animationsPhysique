@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="d5140c89-161c-487d-8bf2-dd7507a24bbc" name="Default" comment="ENFIN DÉBUGUÉ!">
+    <list default="true" id="d5140c89-161c-487d-8bf2-dd7507a24bbc" name="Default" comment="traite la trace comme une vraie trace!">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/NYA/orbite.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/NYA/orbite.html" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -15,7 +14,7 @@
     <session id="-1928743983">
       <usages-collector id="statistics.lifecycle.project">
         <counts>
-          <entry key="project.closed" value="1" />
+          <entry key="project.closed" value="2" />
           <entry key="project.open.time.1" value="2" />
           <entry key="project.opened" value="2" />
         </counts>
@@ -35,13 +34,13 @@
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
           <entry key="html" value="5168" />
-          <entry key="txt" value="257" />
+          <entry key="txt" value="296" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
           <entry key="HTML" value="5168" />
-          <entry key="PLAIN_TEXT" value="257" />
+          <entry key="PLAIN_TEXT" value="296" />
         </counts>
       </usages-collector>
     </session>
@@ -60,8 +59,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/docs/NYA/orbite.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="464">
-              <caret line="116" column="33" selection-start-line="116" selection-start-column="33" selection-end-line="116" selection-end-column="33" />
+            <state relative-caret-position="311">
+              <caret line="107" column="64" lean-forward="true" selection-start-line="107" selection-start-column="64" selection-end-line="107" selection-end-column="64" />
               <folding>
                 <element signature="e#569#575#0" expanded="true" />
               </folding>
@@ -95,10 +94,10 @@
     </option>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="372" />
-    <option name="y" value="33" />
+    <option name="x" value="297" />
+    <option name="y" value="24" />
     <option name="width" value="1528" />
-    <option name="height" value="1029" />
+    <option name="height" value="962" />
   </component>
   <component name="ProjectView">
     <navigator proportions="" version="1">
@@ -278,11 +277,18 @@
       <option name="project" value="LOCAL" />
       <updated>1551385039958</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="traite la trace comme une vraie trace!">
+      <created>1551386249098</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1551386249098</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="372" y="33" width="1528" height="1029" extended-state="0" />
+    <frame x="297" y="24" width="1528" height="962" extended-state="0" />
     <editor active="true" />
     <layout>
       <window_info content_ui="combo" id="Project" order="0" weight="0.29495913" />
@@ -353,7 +359,8 @@
     <MESSAGE value="trace fonctionne, mais n'est pas limitée&#10;tentative d'utiliser un json pour les données de cinématique" />
     <MESSAGE value="les données sont maintenant dans une classe personalisée mais le satelitte crash dans le soleil!" />
     <MESSAGE value="ENFIN DÉBUGUÉ!" />
-    <option name="LAST_COMMIT_MESSAGE" value="ENFIN DÉBUGUÉ!" />
+    <MESSAGE value="traite la trace comme une vraie trace!" />
+    <option name="LAST_COMMIT_MESSAGE" value="traite la trace comme une vraie trace!" />
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/docs/index.php">
@@ -368,8 +375,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/docs/NYA/orbite.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="464">
-          <caret line="116" column="33" selection-start-line="116" selection-start-column="33" selection-end-line="116" selection-end-column="33" />
+        <state relative-caret-position="311">
+          <caret line="107" column="64" lean-forward="true" selection-start-line="107" selection-start-column="64" selection-end-line="107" selection-end-column="64" />
           <folding>
             <element signature="e#569#575#0" expanded="true" />
           </folding>
