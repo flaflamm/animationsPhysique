@@ -8,7 +8,7 @@ But: Montrer des orbites circulaires, elliptiques, certains vecteurs associés a
 <div class="imageContainer aspectRation2-1"><div id="orbite"></div></div>
 
 <div class="controls">
-  <label for="masseCentre">Masse de l'objet central:&nbsp;<input type="range" id="masseCentre" name="masseCentre" value="30" max="40" min="24" step="0.2" oninput="redraw()" onchange="redraw()"></label>
+  <label for="masseCentre">Masse de l'objet central:&nbsp;<input type="range" id="masseCentre" name="masseCentre" value="30" max="40" min="24" step="0.2"></label>
   <button type="button" onclick="redraw()">Click Me!</button>
   <label for="vitesseTangentielle">Vitesse Tangentielle:&nbsp;<input type="checkbox" class="switch" id="vitesseTangentielle" name="vitesseTangentielle"></label><br>
   <label for="accCentripete">Accélération Centripète:&nbsp;<input type="checkbox" class="switch" id="accCentripete" name="accCentripete"></label><br>
@@ -36,7 +36,7 @@ But: Montrer des orbites circulaires, elliptiques, certains vecteurs associés a
   //Gfx de  la masse centrale
   var masseCentre = draw.circle(1).attr({ cx: solX, cy: solY, fill: '#ffffff' });
   //Paramètres de cinématique pour le satellite principal
-  let cin = new Cinema(700.0, 250.0, 0.0, 13.0, 0.0, 0.0, solX, solY);
+  let cin = new Cinema(700.0, 250.0, 0.0, -13.0, 0.0, 0.0, solX, solY);
   //Paramètres de cinématique pour les éléments de la trace de l'orbite
   for(i=0; i < maxTracesOrbite; i++){
     var cint = new Cinema(700.0, 250.0, 0.0, -13.0, 0.0, 0.0, solX, solY);

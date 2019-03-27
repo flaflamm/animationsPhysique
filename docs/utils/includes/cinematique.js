@@ -1,3 +1,5 @@
+//Développé le 2019-02-28 par Michaël Juneau
+
 //Classe pour conserver les données de cinématique pour la position, vitesse et accélération
 //Son utilisation devrait prendre compte des traductions entre le système de coordonnées globales à l'écran
 //(0,0) étant dans le coin supérieur gauche, l'axe des y orienté positivement vers le bas; c'est le système utilisé
