@@ -47,12 +47,14 @@ But: Démontrer le déplacement des charges lors d'une charge par induction, ave
 
 
       for(i=0; i<9; i++){
-        var debutX = centreBouleGaucheX - rayonCharges * Math.sin(i * angleVoisinsDebut);
+        j=i+7;
+        if(j>8)j-=9;
+        var debutX = centreBouleGaucheX - rayonCharges * Math.sin(j * angleVoisinsDebut);
         var finX = centreBouleGaucheX - rayonCharges * Math.sin(i * angleVoisinsFin + extraAngleFin) + finaleBouleGaucheX;
 
-        var debutY = centreBouleGaucheY - rayonCharges * Math.cos(i * angleVoisinsDebut);
+        var debutY = centreBouleGaucheY - rayonCharges * Math.cos(j * angleVoisinsDebut);
         var finY = centreBouleGaucheY - rayonCharges * Math.cos(i * angleVoisinsFin + extraAngleFin);
-        charges[i].x(debutX + (finX-debutX) * index/400).y(debutY + (finY-debutY) * index/400)
+        charges[j].x(debutX + (finX-debutX) * index/400).y(debutY + (finY-debutY) * index/400)
       }
 
     }
