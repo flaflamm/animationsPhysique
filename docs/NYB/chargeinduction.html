@@ -7,20 +7,54 @@ But: Démontrer le déplacement des charges lors d'une charge par induction, ave
 <div id="imageContainer" class="aspectRation4-1"><div id="chargeinduction"></div></div>
 
 <div class="controls">
-  <label for="axeTemps">Axe du temps:&nbsp;<input type="range" id="axeTemps" name="axeTemps" value="0" max="100" min="0" step="1"></label>
+  <label for="axeTemps">Axe du temps:&nbsp;<input type="range" id="axeTemps" name="axeTemps" value="0" max="400" min="0" step="4" oninput="redraw()" onchange="redraw()"></label>
   <button type="button" onclick="redraw()">Click Me!</button>
   <label for="miseaterre">Utiliser une mise à terre:&nbsp;<input type="checkbox" class="switch" id="miseaterre" name="miseaterre"></label><br>
 </div>
 
 <script src='utils/includes/vector.js'></script>
-<script src='utils/includes/charge.js'></script>
+<script src='utils/includes/charge.js?v=8'></script>
 <script>
+
   //Création de l'élément svg (l'image).
   var draw = SVG('chargeinduction').viewbox({ x: 0, y: 0, width: 1000, height: 500 });
 
-  var monPremierProton = draw.circle(40).attr({ cx: 50, cy: 50, fill: '#ffffff' }).charge('plus');
-  var monPremierElectron = draw.circle(35).attr({ cx: 300, cy: 300, fill: '#0000ff' }).charge('moins');
+    var centreBouleGaucheX = 100;
+    var centreBouleGaucheY = 200;
+    var finaleBouleGaucheX = 300;
+    var angleVoisinsDebut = 40.0 * Math.PI/180.0;
+    var angleVoisinsFin = 20.0 * Math.PI/180.0;
+    var extraAngleFin = 10.0 * Math.PI/180.0;
+    var rayonBouleGauche = 160;
+    var rayonCharges = 135;
+    var charges = [];
+    var bouleGauche = draw.circle(2*rayonBouleGauche).x(centreBouleGaucheX-rayonCharges).y(centreBouleGaucheY-rayonCharges).fill('#dadada');
 
-  draw();
+    for(i=0; i<9; i++){
+      var charge = draw.Charge();
+      charge.move(centreBouleGaucheX + rayonBouleGauche * Math.cos(i * angleVoisinsDebut),
+       centreBouleGaucheY - rayonBouleGauche * Math.sin(i * angleVoisinsDebut))
+       charges.push(charge);
+    }
+
+
+    redraw();
+
+    function redraw(){
+      var index = parseFloat(document.getElementById("axeTemps").value);
+
+      bouleGauche.x(centreBouleGaucheX-rayonCharges + (finaleBouleGaucheX - (centreBouleGaucheX-rayonCharges))*index/400);
+
+
+      for(i=0; i<9; i++){
+        var debutX = centreBouleGaucheX - rayonCharges * Math.sin(i * angleVoisinsDebut);
+        var finX = centreBouleGaucheX - rayonCharges * Math.sin(i * angleVoisinsFin + extraAngleFin) + finaleBouleGaucheX;
+
+        var debutY = centreBouleGaucheY - rayonCharges * Math.cos(i * angleVoisinsDebut);
+        var finY = centreBouleGaucheY - rayonCharges * Math.cos(i * angleVoisinsFin + extraAngleFin);
+        charges[i].x(debutX + (finX-debutX) * index/400).y(debutY + (finY-debutY) * index/400)
+      }
+
+    }
 
 </script>
