@@ -3,15 +3,15 @@
 $animations = array(
   'penombre'=>array('titre'=>'Ombre & Pénombre', 'cours'=>'A42', 'chemin'=>'A42/penombre.html'),
 	'accerateurLineaire'=>array('titre'=>'Accélérateur Linéaire', 'cours'=>'C42', 'chemin'=>'C42/accelerateurLineaire.html'),
-	'resistanceEcoulement'=>array('titre'=>'Résistance à l\'écoulement dans un orifice', 'cours'=>'143', 'chemin'=>'143/resistanceEcoulement.html'),
+  'resistanceEcoulementTube'=>array('titre'=>'Résistance à l\'écoulement dans un tube', 'cours'=>'143', 'chemin'=>'143/resistanceEcoulementTube.html'),
+  'resistanceEcoulement'=>array('titre'=>'Résistance à l\'écoulement dans un orifice', 'cours'=>'143', 'chemin'=>'143/resistanceEcoulement.html'),
   //'ombre'=>array('titre'=>'Ombre & Pénombre', 'cours'=>'A42', 'chemin'=>'A42/penombre.html')
 );
-
 //Liste des cours : code=>titre
 $cours = array(
   'NYA'=>'Mécanique',
   'NYB'=>'Électricité & Magnétisme',
-  'NYC'=>'Ondes & Physique Moderne',
+  'NYC'=>'Ondes & Physique Moderne',if(realDebit>10) {topText2.text("1Débit: "+Math.round(realDebit*10)/10+" ml/s\n"+realDebit);}
 	'143'=>'Principes physiques des appareils d\'inhalothérapie',
   'A42'=>'Phénomènes Physique (Radiodiagnostic)',
 	'C42'=>'Phénomènes Physique (Radio-oncologie)'

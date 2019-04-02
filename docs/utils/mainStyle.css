@@ -99,8 +99,17 @@ p {
 	padding: 0 5px;
 }
 
+
+.controls>.equals {
+	flex: 1 1 10em;
+}
+
 #imageContainer.aspectRation2-1 {
   padding-bottom: 50%;
+}
+
+#imageContainer.aspectRation3-1 {
+  padding-bottom: 33%;
 }
 
 #imageContainer.aspectRation3-2 {
@@ -112,7 +121,8 @@ p {
 }
 
 @media (min-aspect-ratio: 2/1) {
-  #imageContainer.aspectRation2-1 {
+
+	#imageContainer.aspectRation2-1 {
     width: 80%;
   }
 
@@ -135,6 +145,20 @@ p {
   }
 }
 
+
+@media (min-aspect-ratio: 3/1) {
+  #imageContainer.aspectRation3-1 {
+    width: 80%;
+  }
+
+  .controls {
+    width: 17%;
+    flex-direction: column;
+    justify-content: flex-start;
+  }
+}
+
+
 #imageContainer>div {
   background-color: #abc;
   position: absolute;
@@ -144,6 +168,13 @@ p {
   right: 0;
 }
 
+#imageContainer>.dark {
+	background-color: #678;
+}
+
+#imageContainer>.dark .backgroundFill {
+	fill: #678;
+}
 
 /****************************
 *** Styles de formulaires ***
