@@ -74,6 +74,10 @@ a, a:visited {
   color: #369;
 }
 
+p {
+	margin-top: 0.75em;
+}
+
 .list {
   display: block;
   padding-left: 20px;
@@ -95,6 +99,7 @@ a, a:visited {
 	padding: 0 5px;
 }
 
+
 .controls>.equals {
 	flex: 1 1 10em;
 }
@@ -107,21 +112,39 @@ a, a:visited {
   padding-bottom: 33%;
 }
 
+#imageContainer.aspectRation3-2 {
+  padding-bottom: 66.67%;
+}
+
 #imageContainer.aspectRation4-1 {
   padding-bottom: 25%;
 }
 
 @media (min-aspect-ratio: 2/1) {
+
 	#imageContainer.aspectRation2-1 {
     width: 80%;
   }
 
-  .controls {
+  #imageContainer.aspectRation2-1 + .controls {
     width: 17%;
     flex-direction: column;
     justify-content: flex-start;
   }
 }
+
+@media (min-aspect-ratio: 3/2) {
+  #imageContainer.aspectRation3-2 {
+    width: 80%;
+  }
+
+	#imageContainer.aspectRation3-2 + .controls {
+    width: 17%;
+    flex-direction: column;
+    justify-content: flex-start;
+  }
+}
+
 
 @media (min-aspect-ratio: 3/1) {
   #imageContainer.aspectRation3-1 {
@@ -134,6 +157,7 @@ a, a:visited {
     justify-content: flex-start;
   }
 }
+
 
 #imageContainer>div {
   background-color: #abc;

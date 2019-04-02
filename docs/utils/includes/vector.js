@@ -14,7 +14,7 @@ mais pas aux changements de couleurs - il faut relancer la fonction vector().
 La fonction accepte 3 paramètres (optionnels) vector({size:1,position:'end',style:'curved'})
 	size: taille relative de la flèche (de 0.4 à l'infini)
 	position: 'start', 'end' ou 'both' (où tracer la flèche...)
-	style: 'curved', 'triangle' ou 'lines' (style de la flèche...)
+	style: 'curved', 'triangle', 'lines', 'mesure' (style de la flèche...)
 ********************************************/
 
 SVG.extend(SVG.Path, SVG.Line, SVG.Polyline, {
@@ -35,6 +35,12 @@ SVG.extend(SVG.Path, SVG.Line, SVG.Polyline, {
     else if(style==='lines') {
     	this.marker(position, 10*size+boxCenterizer, 5*size, function(add) {
       	add.path('M0.5 0.5 L'+5*size+' '+2.5*size+' L0.5 '+(5*size-0.5)).fill('none').stroke({ color: color }); });
+    }
+		else if(style==='mesure') {
+    	this.marker(position, 10*size+boxCenterizer, 5*size, function(add) {
+      	add.path('M'+5*size+' '+2.5*size+' L0 '+5*size+' Q'+2*size+' '+2.5*size+' 0 0 Z').fill(color).stroke('none');
+				add.line(4.5*size, -5*size, 4.5*size, 5*size).fill('none').stroke({ color: color, width: size });
+			 });
     }
     else {
     	this.marker(position, 10*size+boxCenterizer, 5*size, function(add) {
