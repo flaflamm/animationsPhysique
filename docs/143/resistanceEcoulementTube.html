@@ -1,4 +1,4 @@
-diameter<p>Un tube horizontal est attaché au bas d'un récipient qui contient une quantité de liquide maintenue à un niveau constant.</p>
+<p>Un tube horizontal est attaché au bas d'un récipient qui contient une quantité de liquide maintenue à un niveau constant.</p>
 <p>Le débit dans le tube dépend de plusieurs facteurs: la longueur $(L)$ et le rayon $(r)$ du tube, la différence de pression $(ΔP)$ entre les extrémités du tube (liée à la hauteur du liquide dans le récipient) ainsi qu'à la viscosité du liquide $(η)$. $$Q = {{\pi r^4 ΔP} \over {8 η L}}$$</p>
 
 <div id="imageContainer" class="aspectRation2-1"><div id="resistanceEcoulementTube" class="dark"></div></div>
@@ -6,8 +6,8 @@ diameter<p>Un tube horizontal est attaché au bas d'un récipient qui contient u
 <div class="controls">
   <label class="equals" for="pression">Hauteur de la colonne d'eau du récipient (pression initiale):&nbsp;<input type="range" id="pression" name="pression" value="50" max="130" min="25" step="1" oninput="redraw('pressure')" onchange="redraw('pressure')"></label>
   <div class='controlGroup equals'>
-    <label for="tubeLongueur">Longueur du tube:&nbsp;<input type="range" id="tubeLongueur" name="tubeLongueur" value="300" max="400" min="25"  step="1" oninput="redraw('length')" onchange="redraw('length')"></label><br>
-    <label for="tubeDiametre">Diamètre du tube:&nbsp;<input type="range" id="tubeDiametre" name="tubeDiametre" value="7" max="10" min="5" step="0.1" oninput="redraw('radius')" onchange="redraw('radius')"></label>
+    <label for="tubeLongueur">Longueur du tube:&nbsp;<input type="range" id="tubeLongueur" name="tubeLongueur" value="300" max="400" min="100"  step="1" oninput="redraw('length')" onchange="redraw('length')"></label><br>
+    <label for="tubeDiametre">Diamètre du tube:&nbsp;<input type="range" id="tubeDiametre" name="tubeDiametre" value="7" max="4" min="0.7" step="0.1" oninput="redraw('radius')" onchange="redraw('radius')"></label>
   </div>
 	<div class='controlGroup equals'>
 	  <label for="viscosite">Viscosité du liquide (eau ou sang à 37°C):&nbsp;<input type="checkbox" class="switch" id="viscosite" name="viscosite" oninput="redraw('viscosity')" onchange="redraw('viscosity')"></label><br>
@@ -103,6 +103,7 @@ diameter<p>Un tube horizontal est attaché au bas d'un récipient qui contient u
 		var diameter = parseFloat(document.getElementById("tubeDiametre").value);
 		var dP = parseFloat(document.getElementById("pression").value);
 		var length = parseFloat(document.getElementById("tubeLongueur").value);
+		var tubeDiameter = diameter*2;
 		if(document.getElementById('viscosite').checked) {
 			var viscosity = 2.8;
 			var liquid = 'sang';
@@ -116,9 +117,10 @@ diameter<p>Un tube horizontal est attaché au bas d'un récipient qui contient u
 
 		var innerRadius=0;
 		if(!closed) {
-			var debit = diameter*diameter*Math.sqrt(dP/(viscosity*length)); //Entre 3,735 et 272,6... Pas le vrai débit!!!
-			innerRadius = 1.339*debit;
-			var outerRadius = innerRadius+diameter;
+			var debit = diameter*diameter*Math.sqrt(dP/(viscosity*length)); //Entre 0,037351 et 21,804... Pas le vrai débit!!!
+			innerRadius = 5*debit;
+			if(innerRadius<5) {innerRadius=5;}
+			var outerRadius = innerRadius+tubeDiameter;
 
 			var drop=0;
 			if(innerRadius<90) { drop = 90 - innerRadius; }
@@ -127,17 +129,17 @@ diameter<p>Un tube horizontal est attaché au bas d'un récipient qui contient u
 		//Redessine le tube horizontal
 		if(turbulent) {
 			tubeBottom.plot('M130 170 h'+length+' v10');
-			tubeTop.plot('M130 '+(160-diameter)+' h'+length+'a '+(diameter+10)+' '+(diameter+10)+' 0 0 1 '+(diameter+10)+' '+(diameter+10)+' v 10');
+			tubeTop.plot('M130 '+(160-tubeDiameter)+' h'+length+'a '+(tubeDiameter+10)+' '+(tubeDiameter+10)+' 0 0 1 '+(tubeDiameter+10)+' '+(tubeDiameter+10)+' v 10');
 		}
 		else {
 			tubeBottom.plot('M130 170 h'+length);
-			tubeTop.plot('M130 '+(160-diameter)+' h'+length);
+			tubeTop.plot('M130 '+(160-tubeDiameter)+' h'+length);
 		}
 
 		//Redessine le bouchon
 		if(closed) {
-			if(turbulent) {bouchon.show().plot('M'+(135+length)+' 178 h'+(diameter)+' l6 12 h'+(-diameter-12)+' z')}
-			else {bouchon.show().plot('M'+(128+length)+' 165 v'+(-diameter)+' l12 -6 v'+(diameter+12)+' z')}
+			if(turbulent) {bouchon.show().plot('M'+(135+length)+' 178 h'+(tubeDiameter)+' l6 12 h'+(-tubeDiameter-12)+' z')}
+			else {bouchon.show().plot('M'+(128+length)+' 165 v'+(-tubeDiameter)+' l12 -6 v'+(tubeDiameter+12)+' z')}
 		}
 		else {bouchon.hide();}
 
@@ -148,23 +150,23 @@ diameter<p>Un tube horizontal est attaché au bas d'un récipient qui contient u
 		var waterPath = 'M25 165 ' //Début du chemin
 		if(turbulent) {
 			waterPath += 'H '+(130+length)+'a 5 5 0 0 1 5 5';
-			if(closed) {waterPath +=' v 8 h'+diameter+' v-8'}
-			else {waterPath +=' l'+diameter/4+' 80 h'+diameter/2+' l'+diameter/4+'-80'}
-			waterPath += ' a '+(diameter+5)+' '+(diameter+5)+' 0 0 0 '+(-diameter-5)+' '+(-diameter-5)
+			if(closed) {waterPath +=' v 8 h'+tubeDiameter+' v-8'}
+			else {waterPath +=' l'+tubeDiameter/4+' 80 h'+tubeDiameter/2+' l'+tubeDiameter/4+'-80'}
+			waterPath += ' a '+(tubeDiameter+5)+' '+(tubeDiameter+5)+' 0 0 0 '+(-tubeDiameter-5)+' '+(-tubeDiameter-5)
 		}
 		else {
-			if(closed) { waterPath += 'H '+(128+length)+' V'+(165-diameter); }
-			else { waterPath += 'h '+(105+length)+' a '+(innerRadius)+' '+(innerRadius)+' 0 0 1'+(innerRadius)+' '+(innerRadius)+' v'+(drop)+' h'+(diameter/2)+' v'+(-drop)+' a '+(outerRadius)+' '+(outerRadius)+' 0 0 0'+(-outerRadius)+' '+(-outerRadius); }
+			if(closed) { waterPath += 'H '+(128+length)+' V'+(165-tubeDiameter); }
+			else { waterPath += 'h '+(105+length)+' a '+(innerRadius)+' '+(innerRadius)+' 0 0 1'+(innerRadius)+' '+(innerRadius)+' v'+(drop)+' h'+(tubeDiameter/2)+' v'+(-drop)+' a '+(outerRadius)+' '+(outerRadius)+' 0 0 0'+(-outerRadius)+' '+(-outerRadius); }
 		}
-		waterPath += ' H 125 v'+(diameter-dP)+'h-100 z'; //Fin du chemin (horizontal)
+		waterPath += ' H 125 v'+(tubeDiameter-dP)+'h-100 z'; //Fin du chemin (horizontal)
 		water.plot(waterPath).fill(waterColor);
 
 		//Redessine les tubes verticaux
 		var height = 'V'+(165-dP);
 		if(length > 100) {
 			if(!closed) {
-				if(turbulent) {height = 'v'+(-diameter -(dP-diameter)*(length-50)/length); }
-				else {height = 'v'+(-diameter -(dP-diameter)*(length-80)/length); }
+				if(turbulent) {height = 'v'+(-tubeDiameter -(dP-tubeDiameter)*(length-50)/length); }
+				else {height = 'v'+(-tubeDiameter -(dP-tubeDiameter)*(length-80)/length); }
 			}
 			tube1.show().water.plot('M206 165 h8 '+height+' h-8 z').fill(waterColor);
 
@@ -174,31 +176,31 @@ diameter<p>Un tube horizontal est attaché au bas d'un récipient qui contient u
 			}
 			else {
 				if(turbulent) {
-					if(length > 340) {tube1.pressureLine.plot([[130,165-dP],[450,165-dP-320*(diameter-dP)/(1.6*length)],[130+length,165-diameter]])}
-					else if(length > 260) {tube1.pressureLine.plot([[130,165-dP],[370,165-dP-240*(diameter-dP)/(1.6*length)],[130+length,165-diameter]])}
-					else if(length > 180) {tube1.pressureLine.plot([[130,165-dP],[290,165-dP-160*(diameter-dP)/(1.6*length)],[130+length,165-diameter]])}
-					else {tube1.pressureLine.plot([[130,165-dP],[210,165-dP-80*(diameter-dP)/(1.6*length)],[130+length,165-diameter]])}
+					if(length > 340) {tube1.pressureLine.plot([[130,165-dP],[450,165-dP-320*(tubeDiameter-dP)/(1.6*length)],[130+length,165-tubeDiameter]])}
+					else if(length > 260) {tube1.pressureLine.plot([[130,165-dP],[370,165-dP-240*(tubeDiameter-dP)/(1.6*length)],[130+length,165-tubeDiameter]])}
+					else if(length > 180) {tube1.pressureLine.plot([[130,165-dP],[290,165-dP-160*(tubeDiameter-dP)/(1.6*length)],[130+length,165-tubeDiameter]])}
+					else {tube1.pressureLine.plot([[130,165-dP],[210,165-dP-80*(tubeDiameter-dP)/(1.6*length)],[130+length,165-tubeDiameter]])}
 				}
-				else {tube1.pressureLine.plot([[130,165-dP],[130+length,165-diameter]])}
-				tube1.pressureText.move(130+length,135-diameter)
+				else {tube1.pressureLine.plot([[130,165-dP],[130+length,165-tubeDiameter]])}
+				tube1.pressureText.move(130+length,135-tubeDiameter)
 			}
 
 			if(length > 180) {
 				if(!closed) {
-					if(turbulent) {height = 'v'+(-diameter -(dP-diameter)*(length-100)/length); }
-					else {height = 'v'+(-diameter -(dP-diameter)*(length-160)/length); }
+					if(turbulent) {height = 'v'+(-tubeDiameter -(dP-tubeDiameter)*(length-100)/length); }
+					else {height = 'v'+(-tubeDiameter -(dP-tubeDiameter)*(length-160)/length); }
 				}
 				tube2.show().water.plot('M286 165 h8 '+height+' h-8 z').fill(waterColor);
 				if(length > 260) {
 					if(!closed) {
-						if(turbulent) {height = 'v'+(-diameter -(dP-diameter)*(length-150)/length); }
-						else {height = 'v'+(-diameter -(dP-diameter)*(length-240)/length); }
+						if(turbulent) {height = 'v'+(-tubeDiameter -(dP-tubeDiameter)*(length-150)/length); }
+						else {height = 'v'+(-tubeDiameter -(dP-tubeDiameter)*(length-240)/length); }
 					}
 					tube3.show().water.plot('M366 165 h8 '+height+' h-8 z').fill(waterColor);
 					if(length > 340) {
 						if(!closed) {
-							if(turbulent) {height = 'v'+(-diameter -(dP-diameter)*(length-200)/length); }
-							else {height = 'v'+(-diameter -(dP-diameter)*(length-320)/length); }
+							if(turbulent) {height = 'v'+(-tubeDiameter -(dP-tubeDiameter)*(length-200)/length); }
+							else {height = 'v'+(-tubeDiameter -(dP-tubeDiameter)*(length-320)/length); }
 						}
 						tube4.show().water.plot('M446 165 h8 '+height+' h-8 z').fill(waterColor);
 					}
@@ -230,17 +232,19 @@ diameter<p>Un tube horizontal est attaché au bas d'un récipient qui contient u
 		waterWheelParent.move(waterWheelPosition,300);
 
 		waterWheel.finish();
-		if(!closed) {waterWheel.animate(1000000/Math.pow(debit,1.4), '-').rotate(360).loop();}
+		if(!closed) {waterWheel.animate(100000/Math.pow(debit,1.4), '-').rotate(360).loop();}
 
 		//Textes...
 		topText.text("Pression: "+(dP/10)+"cm d'eau\nViscosité: "+viscosity+"cP ("+liquid+")\nLongueur du tube: "+length+"mm\nDiamètre du tube: "+diameter+"mm");
-		if(closed) {topText2.text("Débit: 0.00l/s");}
+		if(closed) {topText2.text("Débit: 0.00 ml/s");}
 		else {
-			var realDebit = debit*debit/4153.279
+			var realDebit = debit*debit/4.153279
 			if(turbulent) { realDebit*=0.7; }
 
-			if(realDebit>0.1) {	topText2.text("Débit: "+Math.round(realDebit*100)/100+"l/s"); }
-			else { topText2.text("Débit: "+Math.round(realDebit*1000)+"ml/s"); }
+			if(realDebit>100) {topText2.text("0Débit: "+Math.round(realDebit)+" ml/s\n"+realDebit);}
+			else if(realDebit>10) {topText2.text("1Débit: "+Math.round(realDebit*10)/10+" ml/s\n"+realDebit);}
+			else if (realDebit>1) {topText2.text("2Débit: "+Math.round(realDebit*100)/100+" ml/s\n"+realDebit);}
+			else {topText2.text("3Débit: "+Math.round(realDebit*1000)/1000+" ml/s\n"+realDebit);}
 		}
 
 		//Explications!
