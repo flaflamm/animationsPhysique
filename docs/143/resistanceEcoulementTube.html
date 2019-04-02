@@ -241,10 +241,10 @@
 			var realDebit = debit*debit/4.153279
 			if(turbulent) { realDebit*=0.7; }
 
-			if(realDebit>100) {topText2.text("0Débit: "+Math.round(realDebit)+" ml/s\n"+realDebit);}
-			else if(realDebit>10) {topText2.text("1Débit: "+Math.round(realDebit*10)/10+" ml/s\n"+realDebit);}
-			else if (realDebit>1) {topText2.text("2Débit: "+Math.round(realDebit*100)/100+" ml/s\n"+realDebit);}
-			else {topText2.text("3Débit: "+Math.round(realDebit*1000)/1000+" ml/s\n"+realDebit);}
+			if(realDebit>100) {topText2.text("Débit: "+Math.round(realDebit)+" ml/s");}
+			else if(realDebit>10) {topText2.text("Débit: "+Math.round(realDebit*10)/10+" ml/s");}
+			else if (realDebit>1) {topText2.text("Débit: "+Math.round(realDebit*100)/100+" ml/s");}
+			else {topText2.text("Débit: "+Math.round(realDebit*1000)/1000+" ml/s");}
 		}
 
 		//Explications!
