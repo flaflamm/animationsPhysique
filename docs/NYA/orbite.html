@@ -1,0 +1,130 @@
+<!--
+Développé le 2019-02-01 par Michaël Juneau
+
+Démo d'animation d'orbite gérée par un delai temporelle. L'algorithme simplet d'Euler est utilisé.
+But: Montrer des orbites circulaires, elliptiques, certains vecteurs associés au mouvement circulaire
+-->
+
+<div class="imageContainer aspectRation2-1"><div id="orbite"></div></div>
+
+<div class="controls">
+  <label for="masseCentre">Masse de l'objet central:&nbsp;<input type="range" id="masseCentre" name="masseCentre" value="30" max="40" min="24" step="0.2"></label>
+  <button type="button" onclick="redraw()">Click Me!</button>
+  <label for="vitesseTangentielle">Vitesse Tangentielle:&nbsp;<input type="checkbox" class="switch" id="vitesseTangentielle" name="vitesseTangentielle"></label><br>
+  <label for="accCentripete">Accélération Centripète:&nbsp;<input type="checkbox" class="switch" id="accCentripete" name="accCentripete"></label><br>
+  <label for="trace">Trace d'orbite:&nbsp;<input type="checkbox" class="switch" id="trace" name="trace"></label><br>
+</div>
+</div>
+
+<script src='utils/includes/vector.js'></script>
+<script src='utils/includes/cinematique.js'></script>
+<script>
+  //Paramètres fudge-factor pour aider à créer une animation satisfaisante
+  var constanteG = 1300;
+  var maxTracesOrbite = 72;
+  var delayEnMs = 62;
+  //Gestion de la trace de l'orbite
+  var cinTraceOrbite = []; //paramètres de cinématique pour les éléments de la trace de l'orbite
+  var gfxTraceOrbite = []; //les éléments de draw.circle pour afficher le graphique des éléments de la trace
+  var signet = 0; //indice pour balayer cinTraceOrbite et gfxTraceOrbite afin de les mettre à jour
+  //Paramètres de la masse centrale; positions en coordonnées absolues
+  var solX = 500;
+  var solY = 250;
+
+  //Création de l'élément svg (l'image).
+  var draw = SVG('orbite').viewbox({ x: 0, y: 0, width: 1000, height: 500 });
+  //Gfx de  la masse centrale
+  var masseCentre = draw.circle(1).attr({ cx: solX, cy: solY, fill: '#ffffff' });
+  //Paramètres de cinématique pour le satellite principal
+  let cin = new Cinema(700.0, 250.0, 0.0, -13.0, 0.0, 0.0, solX, solY);
+  //Paramètres de cinématique pour les éléments de la trace de l'orbite
+  for(i=0; i < maxTracesOrbite; i++){
+    var cint = new Cinema(700.0, 250.0, 0.0, -13.0, 0.0, 0.0, solX, solY);
+    for(j=0; j < i; j++){
+      cint = eulerize(cint);
+    }
+    cinTraceOrbite.push(cint);
+    var masseSatTrace = draw.circle(15).attr({ cx: cinTraceOrbite[i].x, cy: cinTraceOrbite[i].y, fill: '#ffffff' });
+    gfxTraceOrbite.push(masseSatTrace);
+
+    cin = eulerize(cin); // mets celui là toujours 1 au delà du dernier
+  }
+  //Gfx du satellite
+  var masseSat = draw.circle(15).attr({ cx: cin.x, cy: cin.y, fill: '#ff0000' });
+  //Gfx du vecteur vitesse tangentielle
+  var vitTan = draw.line(cin.posX, cin.posY, 10, 15).stroke({width: 1}).vector({size:4});
+  //Gfx du vecteur accélération centripète
+  var accCen = draw.line(cin.posX, cin.posY, 200,200).stroke({width: 1, color: 'green'}).vector({size:4});
+  //Lance la fonction redraw à toutes les delayEnMs
+  var partLeBal = setInterval(redraw,delayEnMs);
+
+  function eulerize(cinema){
+    var ret = cinema;
+
+    //Définit et récupère les valeurs nécessaires à l'image.
+    var rC = parseFloat(document.getElementById("masseCentre").value);
+    //Ajuste les rayons de la source et de l'objet et la position de l'objet.
+    masseCentre.radius(rC);
+    var locX = ret.localX();
+    var locY = ret.localY();
+
+    var distAuCarre = locX*locX + locY*locY;
+    var dist = Math.sqrt(distAuCarre);
+    var acc = constanteG * rC * 1.0 / distAuCarre;
+
+    ret.aX = -(locX / dist) * acc;
+    ret.aY = -(locY / dist) * acc;
+
+    //Le coeur de l'algorithme Euler, la vitesse est modifiée avant la position
+    ret.vX += ret.aX;
+    ret.vY += ret.aY;
+    locX += ret.vX;
+    locY += ret.vY;
+
+    //Rafraichit les positions en coordonnées globales
+    ret.saveAsGlobalX(locX);
+    ret.saveAsGlobalY(locY);
+
+    return ret;
+  }
+
+  function redraw() {
+    //Met à jour les paramètre de cinématiques du satellite
+    cin = eulerize(cin);
+    masseSat.cx(cin.x).cy(cin.y);
+
+    //Met à jour les vecteurs
+    vitTan.plot(cin.x, cin.y, cin.x + 5*cin.vX, cin.y - 5*cin.vY);
+    accCen.plot(cin.x, cin.y, cin.x + 50*cin.aX, cin.y - 50*cin.aY);
+
+    //Affiche ou cache le vecteur de vitesse tangentielle
+    if(document.getElementById('vitesseTangentielle').checked) {
+      vitTan.show();
+    } else{
+      vitTan.hide();
+    }
+
+    //Affiche ou cache le vecteur d'accélération centripète'
+    if(document.getElementById('accCentripete').checked) {
+      accCen.show();
+    } else{
+      accCen.hide();
+    }
+
+    //Met à jour les traces de l'orbite
+    for(i=0; i < maxTracesOrbite; i++){
+      if( i == signet) {
+        cinTraceOrbite[i] = cin;
+        gfxTraceOrbite[i].cx(cinTraceOrbite[i].x).cy(cinTraceOrbite[i].y);
+      }
+
+      if(document.getElementById('trace').checked) {
+        gfxTraceOrbite[i].show();
+      } else {
+        gfxTraceOrbite[i].hide();
+      }
+    }
+    signet++;
+    if(signet > maxTracesOrbite - 1) signet = 0;
+  } // fin de redraw
+</script>

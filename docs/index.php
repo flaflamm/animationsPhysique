@@ -1,6 +1,6 @@
 <?php
 //Liste des animations existantes : queryString=>{titre, cours, chemin}
-$animations = array(
+$animations = array('orbite'=>array('titre'=>'Orbite', 'cours'=>'NYA', 'chemin'=>'NYA/orbite.html'),
   'penombre'=>array('titre'=>'Ombre & Pénombre', 'cours'=>'A42', 'chemin'=>'A42/penombre.html'),
 	'accerateurLineaire'=>array('titre'=>'Accélérateur Linéaire', 'cours'=>'C42', 'chemin'=>'C42/accelerateurLineaire.html'),
   'resistanceEcoulementTube'=>array('titre'=>'Résistance à l\'écoulement dans un tube', 'cours'=>'143', 'chemin'=>'143/resistanceEcoulementTube.html'),
