@@ -6,7 +6,7 @@
 		<p class="detailsToHide">Dans un tube, le débit doit nécessairement être le même en tout point&nbsp;: c'est une conséquence de la loi de la conservation de la matière. Puisque le débit ($Q$) peut être donné par: $$Q=Av$$ où $A$ est l'aire de la section du tube et $v$ la vitesse du fluide (liquide ou gaz).</p>
 		<p class="detailsToHide">Si une partie du tube a une plus petite aire, cela aura pour effet d'augmenter la vitesse du fluide dans cette partie.</p>
 		<p class="detailsToHide">Pour respecter le principe de conservation de l'énergie, une augmentation de la vitesse s'accompagnera d'une diminution de la pression dans cette partie du tube tel que montré par les manomètres à eau.</p>
-		<label for="relativeDiameter">Diamètre de la partie centrale du tube&nbsp;:&nbsp;<input type="range" id="relativeDiameter" name="relativeDiameter" value="1" max="1.5" min="0.3" step="0.1" oninput="redraw()" onchange="redraw()"></label>
+		<label for="relativeDiameter">Diamètre de la partie centrale du tube&nbsp;:&nbsp;<input type="range" id="relativeDiameter" name="relativeDiameter" value="0.9" max="1.5" min="0.3" step="0.01" oninput="redraw()" onchange="redraw()"></label>
 
 	</div>
 
@@ -14,6 +14,7 @@
 
 </div>
 
+<script src='utils/includes/vector.js?v=<?php echo mt_rand(); ?>'></script>
 <script>
   //Création de l'élément svg (l'image).
   var draw = SVG('resistanceEcoulement').viewbox({ x: 0, y: 0, width: 750, height: 375 });
@@ -25,7 +26,7 @@
 	var glassColor = new SVG.Color('#6699ff');
 	var darkGlassColor = new SVG.Color('#4466cc');
 	var lightGlassColor = new SVG.Color('#bbddff');
-	var waterColor = new SVG.Color('#1133cc');
+	var waterColor = new SVG.Color('#1133dd');
 
 	/////////////////////////////////////////////////////////////////////
  	// Création des différents éléments de l'image pour l'introduction //
@@ -41,11 +42,21 @@
 	var tubeEnd = draw.path('M 600 90 v 10 a 20 50 0 0 1 0 100 v 10 a 24 60 0 0 0 0 -120 z').attr({ fill: darkGlassColor});
 	var tubeInt = draw.path('M 100 100 a 20 50 0 0 1 0 100 h 500 a 20 50 0 0 0 0 -100 z').attr({ fill: lightGlassColor});
 
-	var tubeLine1 = draw.path('M 250 100 a 20 50 0 0 1 0 100').fill('none').stroke({ width: 1, color: glassColor }).hide();
-	var tubeLine2 = draw.path('M 300 100 a 20 50 0 0 1 0 100').fill('none').stroke({ width: 1, color: glassColor }).hide();
-	var tubeLine3 = draw.path('M 400 100 a 20 50 0 0 1 0 100').fill('none').stroke({ width: 1, color: glassColor }).hide();
-	var tubeLine4 = draw.path('M 450 100 a 20 50 0 0 1 0 100').fill('none').stroke({ width: 1, color: glassColor }).hide();
+	//Dessin des lignes à l'intérieur du tube
+	var tubeLines = draw.group();
+	tubeLines.line1 = tubeLines.path('M 250 100 a 20 50 0 0 1 0 100').fill('none').stroke({ width: 1, color: glassColor });
+	tubeLines.line2 = tubeLines.path().fill('none').stroke({ width: 1, color: glassColor });
+	tubeLines.line3 = tubeLines.path().fill('none').stroke({ width: 1, color: glassColor });
+	tubeLines.line4 = tubeLines.path('M 450 100 a 20 50 0 0 1 0 100').fill('none').stroke({ width: 1, color: glassColor });
 
+	//Dessin des lignes et du texte pour la variation de pressionTube
+	var pressure = draw.group();
+	pressure.line1 = pressure.path().fill('none').stroke({ width: 1, color: 'black', dasharray: '10,12' });
+	pressure.line2 = pressure.path().fill('none').stroke({ width: 1, color: 'black', dasharray: '10,12' });
+	pressure.quoteline = pressure.path().fill('none').stroke({ width: 1, color: 'black' }).vector({size:1.5,position:'both',style:'curved'});
+	pressure.dP = pressure.text("ΔP").font({family: 'Helvetica', size: 24, anchor: 'middle'}).move(430,247);
+	pressure.explication1 = pressure.text("Puisque la partie centrale est\nplus étroite, le fluide s'y déplace\nplus rapidement et la pression y\nest plus faible.").font({family: 'Helvetica', size: 18}).move(470,230);
+	pressure.explication2 = pressure.text("Puisque la partie centrale est\nplus large, le fluide s'y déplace\nplus lentement et la pression y\nest plus élevée.").font({family: 'Helvetica', size: 18}).move(470,230);
 
 /*
 
@@ -96,7 +107,7 @@
 		particles[i].animate(duree, 'flow',particles[i].randomX*duree).during(function(pos, morph, eased){
 			var p1 = new SVG.Point(path1.pointAt(eased * length)).transform(matrix);
 			var p2 = new SVG.Point(path2.pointAt(eased * length)).transform(matrix);
-			this.attr({ cx: p1.x, cy: this.randomY*p1.y+(1-this.randomY)*p2.y })
+			this.atetr({ cx: p1.x, cy: this.randomY*p1.y+(1-this.randomY)*p2.y })
 		}).loop(true)
 	}
 
@@ -145,20 +156,23 @@
 		tubeInt.plot('M 100 100 a 20 50 0 0 1 0 100 h 150 l 50 '+(-delta)+' h 100 l 50 '+(delta)+' h 150 a 20 50 0 0 0 0 -100 h -150 l -50 '+delta+' h -100 l -50 '+(-delta)+' h -150').attr({ fill: lightGlassColor});
 
 		if(relative==1) {
-			tubeLine1.hide();
-			tubeLine2.hide();
-			tubeLine3.hide();
-			tubeLine4.hide();
+			tubeLines.hide();
+			pressure.hide();
 		}
 		else {
-			tubeLine1.show();
-			tubeLine2.plot('M 300 '+(100+delta)+' a '+(20*relative)+' '+(50*relative)+' 0 0 1 0 '+(100*relative)).show();
-			tubeLine3.plot('M 400 '+(100+delta)+' a '+(20*relative)+' '+(50*relative)+' 0 0 1 0 '+(100*relative)).show();
-			tubeLine4.show();
+			tubeLines.line2.plot('M 300 '+(100+delta)+' a '+(20*relative)+' '+(50*relative)+' 0 0 1 0 '+(100*relative));
+			tubeLines.line3.plot('M 400 '+(100+delta)+' a '+(20*relative)+' '+(50*relative)+' 0 0 1 0 '+(100*relative));
+			tubeLines.show();
+			pressure.show();
+			if(relative>1) {pressure.explication1.hide(); pressure.explication2.show();}
+			else {pressure.explication1.show(); pressure.explication2.hide();}
 		}
 
-		water.plot('M 220 '+(260+delta)+' v '+(60-delta)+' a 20 20 0 0 0 20 20 h 70 a 20 20 0 0 0 20 -20 v '+(-60-delta));
-
+		var pressureDelta = 85*(1-relative)
+		water.plot('M 220 '+(260+pressureDelta)+' v '+(60-pressureDelta)+' a 20 20 0 0 0 20 20 h 70 a 20 20 0 0 0 20 -20 v '+(-60-pressureDelta));
+		pressure.line1.plot('M 215 '+(260+pressureDelta)+' h 190');
+		pressure.line2.plot('M 325 '+(260-pressureDelta)+' h 80');
+		pressure.quoteline.plot('M 396.5 '+(260-pressureDelta)+' v '+2*pressureDelta);
   }
 
 </script>
