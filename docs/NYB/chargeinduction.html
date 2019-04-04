@@ -7,13 +7,12 @@ But: Démontrer le déplacement des charges lors d'une charge par induction, ave
 <div id="imageContainer" class="aspectRation4-1"><div id="chargeinduction"></div></div>
 
 <div class="controls">
-  <label for="axeTemps">Axe du temps:&nbsp;<input type="range" id="axeTemps" name="axeTemps" value="0" max="400" min="0" step="4" oninput="redraw()" onchange="redraw()"></label>
-  <button type="button" onclick="redraw()">Click Me!</button>
-  <label for="miseaterre">Utiliser une mise à terre:&nbsp;<input type="checkbox" class="switch" id="miseaterre" name="miseaterre"></label><br>
+  <label for="axeTemps">Approche de la boule gauche:&nbsp;<input type="range" id="axeTemps" name="axeTemps" value="0" max="400" min="0" step="4" oninput="redraw()" onchange="redraw()"></label>
+  <label for="polariteGauche">Polarité de la boule gauche (+ ou -):&nbsp;<input type="checkbox" class="switch" id="polariteGauche" oninput="redraw()" name="polariteGauche"></label><br>
 </div>
 
 <script src='utils/includes/vector.js'></script>
-<script src='utils/includes/charge.js?v=8'></script>
+<script src='utils/includes/charge.js?v=<?php echo mt_rand(); ?>'></script>
 <script>
 
   //Création de l'élément svg (l'image).
@@ -21,20 +20,37 @@ But: Démontrer le déplacement des charges lors d'une charge par induction, ave
 
     var centreBouleGaucheX = 100;
     var centreBouleGaucheY = 200;
+
+    var centreBouleDroiteX = 800;
+    var centreBouleDroiteY = 200;
+
     var finaleBouleGaucheX = 300;
+    var finaleBouleDroiteX = centreBouleDroiteX;
+
     var angleVoisinsDebut = 40.0 * Math.PI/180.0;
     var angleVoisinsFin = 20.0 * Math.PI/180.0;
     var extraAngleFin = 10.0 * Math.PI/180.0;
+
     var rayonBouleGauche = 160;
+    var rayonBouleDroite = 160;
+
     var rayonCharges = 135;
-    var charges = [];
+    var chargesGauche = [];
+    var chargesDroite = [];
     var bouleGauche = draw.circle(2*rayonBouleGauche).x(centreBouleGaucheX-rayonCharges).y(centreBouleGaucheY-rayonCharges).fill('#dadada');
+    var bouleDroite = draw.circle(2*rayonBouleDroite).x(centreBouleDroiteX-rayonCharges).y(centreBouleDroiteY-rayonCharges).fill('#dadada');
 
     for(i=0; i<9; i++){
       var charge = draw.Charge();
       charge.move(centreBouleGaucheX + rayonBouleGauche * Math.cos(i * angleVoisinsDebut),
        centreBouleGaucheY - rayonBouleGauche * Math.sin(i * angleVoisinsDebut))
-       charges.push(charge);
+       chargesGauche.push(charge);
+    }
+    for(i=0; i<9; i++){
+      var charge = draw.Charge();
+      charge.move(centreBouleDroiteX - rayonBouleDroite * Math.cos(i * angleVoisinsDebut),
+       centreBouleDroiteY - rayonBouleDroite * Math.sin(i * angleVoisinsDebut))
+       chargesDroite.push(charge);
     }
 
 
@@ -42,21 +58,45 @@ But: Démontrer le déplacement des charges lors d'une charge par induction, ave
 
     function redraw(){
       var index = parseFloat(document.getElementById("axeTemps").value);
+      var polGauche = 0;
+      switch(document.getElementById("polariteGauche").checked){
+        case true:
+        polGauche = -1;
+        break;
+        case false:
+        polGauche = 1;
+        break;
+      }
+
+      console.log(polGauche);
 
       bouleGauche.x(centreBouleGaucheX-rayonCharges + (finaleBouleGaucheX - (centreBouleGaucheX-rayonCharges))*index/400);
-
-
+      bouleDroite.x(centreBouleDroiteX-rayonCharges);
+//Boule Gauche
       for(i=0; i<9; i++){
         j=i+7;
         if(j>8)j-=9;
-        var debutX = centreBouleGaucheX - rayonCharges * Math.sin(j * angleVoisinsDebut);
-        var finX = centreBouleGaucheX - rayonCharges * Math.sin(i * angleVoisinsFin + extraAngleFin) + finaleBouleGaucheX;
+
+        var debutX = centreBouleGaucheX - polGauche * rayonCharges * Math.sin(j * angleVoisinsDebut);
+        var finX = centreBouleGaucheX - polGauche * rayonCharges * Math.sin(i * angleVoisinsFin + extraAngleFin) + finaleBouleGaucheX;
 
         var debutY = centreBouleGaucheY - rayonCharges * Math.cos(j * angleVoisinsDebut);
         var finY = centreBouleGaucheY - rayonCharges * Math.cos(i * angleVoisinsFin + extraAngleFin);
-        charges[j].x(debutX + (finX-debutX) * index/400).y(debutY + (finY-debutY) * index/400)
+        chargesGauche[j].x(debutX + (finX-debutX) * index/400).y(debutY + (finY-debutY) * index/400);
+        chargesGauche[j].setPolarite(polGauche);
       }
 
+      //Boule Droite
+      for(i=0; i<9; i++){
+        j=i+7;
+        if(j>8)j-=9;
+        var debutX = centreBouleDroiteX + polGauche * rayonCharges * Math.sin(j * angleVoisinsDebut);
+        var finX = centreBouleDroiteX + polGauche * rayonCharges * Math.sin(i * angleVoisinsFin + extraAngleFin);
+
+        var debutY = centreBouleDroiteY - rayonCharges * Math.cos(j * angleVoisinsDebut);
+        var finY = centreBouleDroiteY - rayonCharges * Math.cos(i * angleVoisinsFin + extraAngleFin);
+        chargesDroite[j].x(debutX + (finX-debutX) * index/400).y(debutY + (finY-debutY) * index/400)
+      }
     }
 
 </script>

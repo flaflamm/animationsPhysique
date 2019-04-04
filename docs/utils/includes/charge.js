@@ -23,11 +23,22 @@ SVG.Charge = SVG.invent({
       this.symbolePolarite.font({anchor: 'middle', size: 60, family: 'Helvetica', fill: '#ffffff'});
 
            return this;
-         }
-      },
-    construct: {
-        Charge: function({radius=50, polarite=1}={radius:50, polarite:1}) {
-         return this.put(new SVG.Charge).constructorMethod({radius:radius, polarite:polarite});
-       }
-    }
+         },
+         setPolarite: function(polarite){
+             this.symbolePolarite.text('o');
+             switch(polarite){
+               case 1:
+                 this.symbolePolarite.text('+');
+                 break;
+               case -1:
+                 this.symbolePolarite.text('-');
+                 break;
+           } // fin de switch
+      } // fin de setPolarite
+    },//fin du extend
+  construct: {
+      Charge: function({radius=50, polarite=1}={radius:50, polarite:1}) {
+       return this.put(new SVG.Charge).constructorMethod({radius:radius, polarite:polarite});
+     }
+   }
 });
