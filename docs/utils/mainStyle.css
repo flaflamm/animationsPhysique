@@ -5,15 +5,21 @@
 header {
   background-color: #456;
   padding: 10px 25px;
+	overflow-x: hidden;
 }
 
 header>h1 {
-  margin: 0px;
+  margin: 0 -1em;
   font-weight: 300;
 	color: white;
 	display: flex;
 	flex-wrap: wrap;
 	justify-content: space-between;
+}
+
+header>h1>* {
+	display: flex;
+  margin: 0 1em;
 }
 
 header>h1>a, header>h1>a:visited {
@@ -23,6 +29,7 @@ header>h1>a, header>h1>a:visited {
 
 header>h1>.small {
 	font-size: 80%;
+	line-height: 2.05em;
 }
 
 h2 {
