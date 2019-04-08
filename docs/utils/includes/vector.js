@@ -20,32 +20,47 @@ La fonction accepte 3 paramètres (optionnels) vector({size:1,position:'end',sty
 SVG.extend(SVG.Path, SVG.Line, SVG.Polyline, {
   vector: function({size=1,position='end',style='curved'}={size:1,position:'end',style:'curved'}) {
   	var boxCenterizer;
-  	if(position==='start') {size=-size; boxCenterizer=2;}
-    else if(position==='both') {
-    	this.vector({size:size,position:'start',style:style});
-    	position='end';
-      boxCenterizer=-2;
-      }
-   	else {position='end'; boxCenterizer=-2;}
+
+		switch(position) {
+			case 'start':
+				size=-size;
+				boxCenterizer=2;
+				break;
+
+			case 'both':
+				this.vector({size:size,position:'start',style:style}); //Recall la fonction pour ajouter au début et continuer pour ajouter à la fin (pas de break!)...
+			default : //Par défaut: 'end'
+				position='end';
+				boxCenterizer=-2;
+		}
+
   	var color = this.attr('stroke');
-    if(style==='triangle') {
-    	this.marker(position, 10*size+boxCenterizer, 5*size, function(add) {
-      	add.path('M'+5*size+' '+2.5*size+' L0 '+5*size+' L 0 0 Z').fill(color).stroke('none'); });
-       }
-    else if(style==='lines') {
-    	this.marker(position, 10*size+boxCenterizer, 5*size, function(add) {
-      	add.path('M0.5 0.5 L'+5*size+' '+2.5*size+' L0.5 '+(5*size-0.5)).fill('none').stroke({ color: color }); });
-    }
-		else if(style==='mesure') {
-    	this.marker(position, 10*size+boxCenterizer, 5*size, function(add) {
-      	add.path('M'+5*size+' '+2.5*size+' L0 '+5*size+' Q'+2*size+' '+2.5*size+' 0 0 Z').fill(color).stroke('none');
-				add.line(4.5*size, -5*size, 4.5*size, 5*size).fill('none').stroke({ color: color, width: size });
-			 });
-    }
-    else {
-    	this.marker(position, 10*size+boxCenterizer, 5*size, function(add) {
-      	add.path('M'+5*size+' '+2.5*size+' L0 '+5*size+' Q'+2*size+' '+2.5*size+' 0 0 Z').fill(color).stroke('none'); });
-     }
+
+		switch(style) {
+			case 'triangle':
+				this.marker(position, 10*Math.abs(size)+boxCenterizer, 5*Math.abs(size), function(add) {
+					add.path('M'+5*Math.abs(size)+' '+2.5*Math.abs(size)+' l'+(-5*size)+' '+(-2.5*size)+' l 0 '+5*size+' Z').fill(color).stroke('none');
+				});
+			  break;
+
+			case 'lines':
+				this.marker(position, 10*Math.abs(size)+boxCenterizer, 5*Math.abs(size), function(add) {
+					add.path('M'+(5*Math.abs(size)-4.5*size)+' '+(2.5*Math.abs(size)-2*size)+' L'+5*Math.abs(size)+' '+2.5*Math.abs(size)+' l '+(-4.5*size)+' '+(2*size)).fill('none').stroke({ color: color });
+				});
+				break;
+
+			case 'mesure':
+				this.marker(position, 10*Math.abs(size)+boxCenterizer, 5*Math.abs(size), function(add) {
+					add.path('M'+5*Math.abs(size)+' '+2.5*Math.abs(size)+' l'+(-5*size)+' '+(-2.5*size)+' q'+2*size+' '+2.5*size+' 0 '+5*size+' Z').fill(color).stroke('none');
+					add.line(5*Math.abs(size)-0.5*size, -5*size, 5*Math.abs(size)-0.5*size, 5*size).fill('none').stroke({ color: color, width: Math.abs(size) });
+				});
+				break;
+
+			default:
+				this.marker(position, 10*Math.abs(size)+boxCenterizer, 5*Math.abs(size), function(add) {
+					add.path('M'+5*Math.abs(size)+' '+2.5*Math.abs(size)+' l'+(-5*size)+' '+(-2.5*size)+' q'+2*size+' '+2.5*size+' 0 '+5*size+' Z').fill(color).stroke('none');
+				});
+		}
 
     return this;
   }

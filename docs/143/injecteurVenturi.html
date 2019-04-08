@@ -1,0 +1,25 @@
+<div id="imageContainer" class="aspectRation2-1"><div id="injecteurVenturi"></div></div>
+
+<div class="controls">
+
+</div>
+
+<script src='utils/includes/pipes.js?v=<?php echo mt_rand(); ?>'></script>
+<script src='utils/includes/vector.js?v=<?php echo mt_rand(); ?>'></script>
+<script>
+  //Création de l'élément svg (l'image).
+  var draw = SVG('injecteurVenturi').viewbox({ x: 0, y: 0, width: 1000, height: 500 });
+	draw.path('M 100 100 h 300').fill('none').stroke({ width: 5, color: 'black' }).vector({size:1.5,position:'both',style:'curved'});
+	draw.path('M 200 200 h 300').fill('none').stroke({ width: 5, color: 'black' }).vector({size:1.5,position:'both',style:'triangle'});
+	draw.path('M 300 300 h 300').fill('none').stroke({ width: 5, color: 'black' }).vector({size:1.5,position:'both',style:'lines'});
+	draw.path('M 400 400 h 300').fill('none').stroke({ width: 5, color: 'black' }).vector({size:1.5,position:'both',style:'mesure'});
+
+
+	//Redessine l'image en tenant compte des contrôles externes
+  redraw();
+
+  function redraw() {
+
+  }
+
+</script>
