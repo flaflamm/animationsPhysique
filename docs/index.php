@@ -8,6 +8,7 @@ $animations = array('orbite'=>array('titre'=>'Orbite', 'cours'=>'NYA', 'chemin'=
 	'pressionTube'=>array('titre'=>'Variation de pression dans un tube', 'cours'=>'143', 'chemin'=>'143/pressionTube.html'),
 	'injecteurVenturi'=>array('titre'=>'Injecteur Venturi', 'cours'=>'143', 'chemin'=>'143/injecteurVenturi.html'),
   'electrophore'=>array('titre'=>'L\'électrophore', 'cours'=>'NYB', 'chemin'=>'NYB/electrophore.html'),
+  'chargeinduction'=>array('titre'=>'Charge par induction', 'cours'=>'NYB', 'chemin'=>'NYB/chargeinduction.html'),
   //'ombre'=>array('titre'=>'Ombre & Pénombre', 'cours'=>'A42', 'chemin'=>'A42/penombre.html')
 );
 //Liste des cours : code=>titre
