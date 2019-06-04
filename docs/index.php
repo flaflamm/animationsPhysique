@@ -1,14 +1,15 @@
 <?php
 //Liste des animations existantes : queryString=>{titre, cours, chemin}
-$animations = array(
+$animations = array('orbite'=>array('titre'=>'Orbite', 'cours'=>'NYA', 'chemin'=>'NYA/orbite.html'),
   'penombre'=>array('titre'=>'Ombre & Pénombre', 'cours'=>'A42', 'chemin'=>'A42/penombre.html'),
 	'accerateurLineaire'=>array('titre'=>'Accélérateur Linéaire', 'cours'=>'C42', 'chemin'=>'C42/accelerateurLineaire.html'),
-	'resistanceEcoulement'=>array('titre'=>'Résistance à l\'écoulement dans un orifice', 'cours'=>'143', 'chemin'=>'143/resistanceEcoulement.html'),
-  'chargeinduction'=>array('titre'=>'Charge par induction', 'cours'=>'NYB', 'chemin'=>'NYB/chargeinduction.html'),
+  'resistanceEcoulementTube'=>array('titre'=>'Résistance à l\'écoulement dans un tube', 'cours'=>'143', 'chemin'=>'143/resistanceEcoulementTube.html'),
+  'resistanceEcoulement'=>array('titre'=>'Résistance à l\'écoulement dans un orifice', 'cours'=>'143', 'chemin'=>'143/resistanceEcoulement.html'),
+	'pressionTube'=>array('titre'=>'Variation de pression dans un tube', 'cours'=>'143', 'chemin'=>'143/pressionTube.html'),
+	'injecteurVenturi'=>array('titre'=>'Injecteur Venturi', 'cours'=>'143', 'chemin'=>'143/injecteurVenturi.html'),
   'electrophore'=>array('titre'=>'L\'électrophore', 'cours'=>'NYB', 'chemin'=>'NYB/electrophore.html'),
-    //'ombre'=>array('titre'=>'Ombre & Pénombre', 'cours'=>'A42', 'chemin'=>'A42/penombre.html')
+  //'ombre'=>array('titre'=>'Ombre & Pénombre', 'cours'=>'A42', 'chemin'=>'A42/penombre.html')
 );
-
 //Liste des cours : code=>titre
 $cours = array(
   'NYA'=>'Mécanique',
@@ -71,8 +72,8 @@ else {
     echo '</div>';
   }
 }
-
  ?>
+
 </main>
 <footer><a href='http://www.cegep-ste-foy.qc.ca'><img src='utils/logocsf.svg'></a></footer>
 

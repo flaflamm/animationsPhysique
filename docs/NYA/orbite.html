@@ -9,10 +9,10 @@ But: Montrer des orbites circulaires, elliptiques, certains vecteurs associés a
 
 <div class="controls">
   <label for="masseCentre">Masse de l'objet central:&nbsp;<input type="range" id="masseCentre" name="masseCentre" value="30" max="40" min="24" step="0.2"></label>
+  <button type="button" onclick="redraw()">Click Me!</button>
   <label for="vitesseTangentielle">Vitesse Tangentielle:&nbsp;<input type="checkbox" class="switch" id="vitesseTangentielle" name="vitesseTangentielle"></label><br>
   <label for="accCentripete">Accélération Centripète:&nbsp;<input type="checkbox" class="switch" id="accCentripete" name="accCentripete"></label><br>
   <label for="trace">Trace d'orbite:&nbsp;<input type="checkbox" class="switch" id="trace" name="trace"></label><br>
-  <button type="button" onclick="reset()">Click Me!</button>
 </div>
 </div>
 
@@ -88,9 +88,6 @@ But: Montrer des orbites circulaires, elliptiques, certains vecteurs associés a
     return ret;
   }
 
-  function reset() {
-
-  }
   function redraw() {
     //Met à jour les paramètre de cinématiques du satellite
     cin = eulerize(cin);

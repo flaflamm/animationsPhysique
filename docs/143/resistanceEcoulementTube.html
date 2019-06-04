@@ -1,0 +1,263 @@
+<p>Un tube horizontal est attaché au bas d'un récipient qui contient une quantité de liquide maintenue à un niveau constant.</p>
+<p>Le débit dans le tube dépend de plusieurs facteurs: la longueur $(L)$ et le rayon $(r)$ du tube, la différence de pression $(ΔP)$ entre les extrémités du tube (liée à la hauteur du liquide dans le récipient) ainsi qu'à la viscosité du liquide $(η)$. $$Q = {{\pi r^4 ΔP} \over {8 η L}}$$</p>
+
+<div id="imageContainer" class="aspectRation2-1"><div id="resistanceEcoulementTube" class="dark"></div></div>
+
+<div class="controls">
+  <label class="equals" for="pression">Hauteur de la colonne d'eau du récipient (pression initiale):&nbsp;<input type="range" id="pression" name="pression" value="50" max="130" min="25" step="1" oninput="redraw('pressure')" onchange="redraw('pressure')"></label>
+  <div class='controlGroup equals'>
+    <label for="tubeLongueur">Longueur du tube:&nbsp;<input type="range" id="tubeLongueur" name="tubeLongueur" value="300" max="400" min="100"  step="1" oninput="redraw('length')" onchange="redraw('length')"></label><br>
+    <label for="tubeDiametre">Diamètre du tube:&nbsp;<input type="range" id="tubeDiametre" name="tubeDiametre" value="7" max="4" min="0.7" step="0.1" oninput="redraw('radius')" onchange="redraw('radius')"></label>
+  </div>
+	<div class='controlGroup equals'>
+	  <label for="viscosite">Viscosité du liquide (eau ou sang à 37°C):&nbsp;<input type="checkbox" class="switch" id="viscosite" name="viscosite" oninput="redraw('viscosity')" onchange="redraw('viscosity')"></label><br>
+		<label for="bouchon">Tube bouché:&nbsp;<input type="checkbox" class="switch" id="bouchon" name="bouchon" oninput="redraw('closed')" onchange="redraw('closed')"></label><br>
+		<label for="turbulent">Écoulement turbulent:&nbsp;<input type="checkbox" class="switch" id="turbulent" name="turbulent" oninput="redraw('turbulent')" onchange="redraw('turbulent')"></label><br>
+	</div>
+</div>
+
+
+<script>
+  //Création de l'élément svg (l'image).
+  var draw = SVG('resistanceEcoulementTube').viewbox({ x: 0, y: 0, width: 650, height: 325 });
+
+	/////////////////////////////////////////////////
+ 	// Création des différents éléments de l'image //
+	/////////////////////////////////////////////////
+
+	var glassColor = new SVG.Color('#abf'); //Couleur utilisée pour le verre.
+	var glassGradient = draw.gradient('linear', function(stop) {
+  	stop.at(0, '#bcf'),
+		stop.at(0.5, '#def'),
+  	stop.at(1, '#bcf');
+	})
+
+	//Récipient
+	draw.rect(110,150).fill(glassGradient).stroke('none').move(20,16);
+	draw.polyline('20,20 20,170 130,170 130,20').fill('none').stroke({ width: 10, color: glassColor, linecap: "round", linejoin:"round" })
+
+	//bouchon
+	var bouchon = draw.path().fill('#000').stroke('none');
+
+	//Tube horizontal
+	var tubeBottom = draw.path().fill('none').stroke({ width: 10, color: glassColor, linecap: "round", linejoin:"round" })
+	var tubeTop = draw.path().fill('none').stroke({ width: 10, color: glassColor, linecap: "round", linejoin:"round" })
+
+	//Tubes verticaux
+	var tube2 = draw.group();
+		tube2.rect(14,145).fill(glassGradient).stroke('none').move(283,16);
+		tube2.polyline('283,18 283,170 297,170 297,18').fill('none').stroke({ width: 6, color: glassColor, linecap: "round", linejoin:"round" })
+		tube2.water = tube2.path();
+	var tube3 = draw.group();
+		tube3.rect(14,145).fill(glassGradient).stroke('none').move(363,16);
+		tube3.polyline('363,18 363,170 377,170 377,18').fill('none').stroke({ width: 6, color: glassColor, linecap: "round", linejoin:"round" })
+		tube3.water = tube3.path();
+	var tube4 = draw.group();
+		tube4.rect(14,145).fill(glassGradient).stroke('none').move(443,16);
+		tube4.polyline('443,18 443,170 457,170 457,18').fill('none').stroke({ width: 6, color: glassColor, linecap: "round", linejoin:"round" })
+		tube4.water = tube4.path();
+	var tube1 = draw.group();
+		tube1.rect(14,145).fill(glassGradient).stroke('none').move(203,16);
+		tube1.polyline('203,18 203,170 217,170 217,18').fill('none').stroke({ width: 6, color: glassColor, linecap: "round", linejoin:"round" })
+		tube1.water = tube1.path();
+
+	//Pressure line
+	tube1.pressureLine = tube1.polyline().stroke({color: "#fd2", width:2, dasharray:"8,8"}).fill('none');
+	tube1.pressureText = tube1.text("ΔP").fill({color: '#fd2'}).font({style:"italic"})
+
+	//Water
+	var water = draw.path().stroke('none');
+
+	//Hiding water in bottom
+	draw.rect(650,650).move(0,255).addClass('backgroundFill');
+
+	//WaterWheel
+	var waterWheelParent = draw.group();
+	var waterWheel = waterWheelParent.group();
+		waterWheel.circle(140).addClass('backgroundFill').cx(0).cy(0); //.fill({color: "#456"})
+		for(var i=0; i<3; i++) {
+			waterWheel.line(-60,0,60,0).stroke({color: "#630", width:10}).rotate(60*i);
+		}
+		for(i=0; i<18; i++) {
+			waterWheel.line(77,5,85,-5).stroke({color: "#210", width:2}).rotate(20*i,0,0)
+		}
+		waterWheel.circle(25).fill({color: '#420'}).cx(0).cy(0);
+		waterWheel.circle(10).fill({color: '#210'}).cx(0).cy(0);
+		waterWheel.circle(140).fill('none').stroke({color: '#420', width:20}).cx(0).cy(0);
+
+	//Text...
+	draw.rect(170,100).radius(5).fill('#fd2').stroke({color: '#000', width:2}).move(470,10);
+	var topText = draw.text('').move(480,10).font({size: 13});
+	var topText2 = draw.text('').move(480,80).font({size: 15});
+
+	var explanation = draw.group().hide();
+		explanation.background = explanation.rect(200,120).radius(5).fill('#fd2').stroke({color: '#000', width:2});
+	 	explanation.Text = explanation.text('').move(10,5).font({size: 13});
+
+
+	//Redessine l'image en tenant compte des contrôles externes
+  redraw('none');
+
+  function redraw(type) {
+		//Récupère les valeurs de l'utilisateur
+		var diameter = parseFloat(document.getElementById("tubeDiametre").value);
+		var dP = parseFloat(document.getElementById("pression").value);
+		var length = parseFloat(document.getElementById("tubeLongueur").value);
+		var tubeDiameter = diameter*2;
+		if(document.getElementById('viscosite').checked) {
+			var viscosity = 2.8;
+			var liquid = 'sang';
+		}
+		else {
+			var viscosity = 0.7;
+			var liquid = 'eau';
+		}
+		var closed = document.getElementById('bouchon').checked;
+		var turbulent = document.getElementById('turbulent').checked;
+
+		var innerRadius=0;
+		if(!closed) {
+			var debit = diameter*diameter*Math.sqrt(dP/(viscosity*length)); //Entre 0,037351 et 21,804... Pas le vrai débit!!!
+			innerRadius = 5*debit;
+			if(innerRadius<5) {innerRadius=5;}
+			var outerRadius = innerRadius+tubeDiameter;
+
+			var drop=0;
+			if(innerRadius<90) { drop = 90 - innerRadius; }
+		}
+
+		//Redessine le tube horizontal
+		if(turbulent) {
+			tubeBottom.plot('M130 170 h'+length+' v10');
+			tubeTop.plot('M130 '+(160-tubeDiameter)+' h'+length+'a '+(tubeDiameter+10)+' '+(tubeDiameter+10)+' 0 0 1 '+(tubeDiameter+10)+' '+(tubeDiameter+10)+' v 10');
+		}
+		else {
+			tubeBottom.plot('M130 170 h'+length);
+			tubeTop.plot('M130 '+(160-tubeDiameter)+' h'+length);
+		}
+
+		//Redessine le bouchon
+		if(closed) {
+			if(turbulent) {bouchon.show().plot('M'+(135+length)+' 178 h'+(tubeDiameter)+' l6 12 h'+(-tubeDiameter-12)+' z')}
+			else {bouchon.show().plot('M'+(128+length)+' 165 v'+(-tubeDiameter)+' l12 -6 v'+(tubeDiameter+12)+' z')}
+		}
+		else {bouchon.hide();}
+
+		//Change la couleur de l'eau
+		var waterColor = new SVG.Color({ r: Math.round(50+25*(viscosity-0.7)), g: Math.round(50*(2.8-viscosity)/2.1), b: Math.round(255*(2.8-viscosity)/2.1) }); //Couleur utilisée pour l'eau.
+
+		//Redessine l'eau du réservoir et du tube horizontal
+		var waterPath = 'M25 165 ' //Début du chemin
+		if(turbulent) {
+			waterPath += 'H '+(130+length)+'a 5 5 0 0 1 5 5';
+			if(closed) {waterPath +=' v 8 h'+tubeDiameter+' v-8'}
+			else {waterPath +=' l'+tubeDiameter/4+' 80 h'+tubeDiameter/2+' l'+tubeDiameter/4+'-80'}
+			waterPath += ' a '+(tubeDiameter+5)+' '+(tubeDiameter+5)+' 0 0 0 '+(-tubeDiameter-5)+' '+(-tubeDiameter-5)
+		}
+		else {
+			if(closed) { waterPath += 'H '+(128+length)+' V'+(165-tubeDiameter); }
+			else { waterPath += 'h '+(105+length)+' a '+(innerRadius)+' '+(innerRadius)+' 0 0 1'+(innerRadius)+' '+(innerRadius)+' v'+(drop)+' h'+(tubeDiameter/2)+' v'+(-drop)+' a '+(outerRadius)+' '+(outerRadius)+' 0 0 0'+(-outerRadius)+' '+(-outerRadius); }
+		}
+		waterPath += ' H 125 v'+(tubeDiameter-dP)+'h-100 z'; //Fin du chemin (horizontal)
+		water.plot(waterPath).fill(waterColor);
+
+		//Redessine les tubes verticaux
+		var height = 'V'+(165-dP);
+		if(length > 100) {
+			if(!closed) {
+				if(turbulent) {height = 'v'+(-tubeDiameter -(dP-tubeDiameter)*(length-50)/length); }
+				else {height = 'v'+(-tubeDiameter -(dP-tubeDiameter)*(length-80)/length); }
+			}
+			tube1.show().water.plot('M206 165 h8 '+height+' h-8 z').fill(waterColor);
+
+			if(closed) {
+				tube1.pressureLine.plot([[130,165-dP],[Math.min(130+length,470),165-dP]])
+				tube1.pressureText.move(Math.min(130+length,400),140-dP)
+			}
+			else {
+				if(turbulent) {
+					if(length > 340) {tube1.pressureLine.plot([[130,165-dP],[450,165-dP-320*(tubeDiameter-dP)/(1.6*length)],[130+length,165-tubeDiameter]])}
+					else if(length > 260) {tube1.pressureLine.plot([[130,165-dP],[370,165-dP-240*(tubeDiameter-dP)/(1.6*length)],[130+length,165-tubeDiameter]])}
+					else if(length > 180) {tube1.pressureLine.plot([[130,165-dP],[290,165-dP-160*(tubeDiameter-dP)/(1.6*length)],[130+length,165-tubeDiameter]])}
+					else {tube1.pressureLine.plot([[130,165-dP],[210,165-dP-80*(tubeDiameter-dP)/(1.6*length)],[130+length,165-tubeDiameter]])}
+				}
+				else {tube1.pressureLine.plot([[130,165-dP],[130+length,165-tubeDiameter]])}
+				tube1.pressureText.move(130+length,135-tubeDiameter)
+			}
+
+			if(length > 180) {
+				if(!closed) {
+					if(turbulent) {height = 'v'+(-tubeDiameter -(dP-tubeDiameter)*(length-100)/length); }
+					else {height = 'v'+(-tubeDiameter -(dP-tubeDiameter)*(length-160)/length); }
+				}
+				tube2.show().water.plot('M286 165 h8 '+height+' h-8 z').fill(waterColor);
+				if(length > 260) {
+					if(!closed) {
+						if(turbulent) {height = 'v'+(-tubeDiameter -(dP-tubeDiameter)*(length-150)/length); }
+						else {height = 'v'+(-tubeDiameter -(dP-tubeDiameter)*(length-240)/length); }
+					}
+					tube3.show().water.plot('M366 165 h8 '+height+' h-8 z').fill(waterColor);
+					if(length > 340) {
+						if(!closed) {
+							if(turbulent) {height = 'v'+(-tubeDiameter -(dP-tubeDiameter)*(length-200)/length); }
+							else {height = 'v'+(-tubeDiameter -(dP-tubeDiameter)*(length-320)/length); }
+						}
+						tube4.show().water.plot('M446 165 h8 '+height+' h-8 z').fill(waterColor);
+					}
+					else {tube4.hide();}
+				}
+				else {
+					tube3.hide();
+					tube4.hide();
+				}
+			}
+			else {
+				tube2.hide();
+				tube3.hide();
+				tube4.hide();
+			}
+		}
+		else {
+			tube1.hide();
+			tube2.hide();
+			tube3.hide();
+			tube4.hide();
+		}
+
+
+		//Redessine la roue à aube
+		if(turbulent) { var waterWheelPosition = length+80; }
+		else if(innerRadius>160) { var waterWheelPosition = length+70+innerRadius+(160-innerRadius)/1.75; }
+		else { var waterWheelPosition = length+70+innerRadius; }
+		waterWheelParent.move(waterWheelPosition,300);
+
+		waterWheel.finish();
+		if(!closed) {waterWheel.animate(100000/Math.pow(debit,1.4), '-').rotate(360).loop();}
+
+		//Textes...
+		topText.text("Pression: "+(dP/10)+"cm d'eau\nViscosité: "+viscosity+"cP ("+liquid+")\nLongueur du tube: "+length+"mm\nDiamètre du tube: "+diameter+"mm");
+		if(closed) {topText2.text("Débit: 0.00 ml/s");}
+		else {
+			var realDebit = debit*debit/4.153279
+			if(turbulent) { realDebit*=0.7; }
+
+			if(realDebit>100) {topText2.text("Débit: "+Math.round(realDebit)+" ml/s");}
+			else if(realDebit>10) {topText2.text("Débit: "+Math.round(realDebit*10)/10+" ml/s");}
+			else if (realDebit>1) {topText2.text("Débit: "+Math.round(realDebit*100)/100+" ml/s");}
+			else {topText2.text("Débit: "+Math.round(realDebit*1000)/1000+" ml/s");}
+		}
+
+		//Explications!
+		if(waterWheelPosition>325) {explanation.move(15,190);}
+		else {explanation.move(435,190);}
+
+		if(type=='pressure') {explanation.show().Text.text("La pression dans le tube varie\nlinéairement lorsque le liquide\ns'écoule. Le débit est\nproportionnel à l'écart de\npression entre les deux\nextrémités du tube.")}
+		else if(type=='length') {explanation.show().Text.text("Le débit est inversement\nproportionnel à la longueur du\ntube: si on double la longueur,\nle débit sera 2 fois plus petit.")}
+		else if(type=='radius') {explanation.show().Text.text("Le débit est proportionnel au\nrayon (ou au diamètre) du tube\nexposant 4: si on double le\nrayon, le débit sera 16 fois plus\ngrand.")}
+		else if(type=='viscosity') {explanation.show().Text.text("Le débit est inversement\nproportionnel à la viscosité du\nliquide: à 37°C, l'eau (0,7cP) a\nune viscosité 4 fois plus petite\nque le sang (2,8cP), le débit de\nl'eau sera 4 fois plus grand.")}
+		else if(type=='closed') {explanation.show().Text.text("Lorsque le tube est bouché, la\npression est constante tout au\nlong du tube.")}
+		else if(type=='turbulent') {explanation.show().Text.text("Un coude dans le tube\nprovoquera un écoulement\nturbulent du liquide ce qui crée\nune chute de pression et\ndiminue le débit (par rapport à\nun écoulement laminaire).")}
+		else {explanation.hide();}
+  }
+
+</script>

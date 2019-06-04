@@ -1,0 +1,157 @@
+<div id="imageContainer" class="aspectRation2-1"><div id="resistanceEcoulement"></div></div>
+
+<div class="controls">
+	<div class="details open">
+		<h2 class="detailsAlwaysVisible" onclick="redraw('intro');">Introduction</h2>
+		<p class="detailsToHide">Dans un tube, le débit doit nécessairement être le même en tout point&nbsp;: c'est une conséquence de la loi de la conservation de la matière. Puisque le débit ($Q$) peut être donné par: $$Q=A\cdot v$$ où $A$ est l'aire de la section du tube et $v$ la vitesse du fluide (liquide ou gaz).</p>
+		<p class="detailsToHide">Si une partie du tube a une plus petite aire, cela aura pour effet d'augmenter la vitesse du fluide dans cette partie.</p>
+		<p class="detailsToHide">Pour respecter le principe de conservation de l'énergie, une augmentation de la vitesse s'accompagnera d'une diminution de la pression dans cette partie du tube tel que montré par les manomètres à eau.</p>
+		<label for="relativeDiameter">Diamètre de la partie centrale du tube&nbsp;:&nbsp;<input type="range" id="relativeDiameter" name="relativeDiameter" value="0.75" max="1.5" min="0.4" step="0.01" oninput="redraw()" onchange="redraw()"></label>
+
+	</div>
+
+
+
+</div>
+
+<script src='utils/includes/vector.js?v=<?php echo mt_rand(); ?>'></script>
+<script>
+  //Création de l'élément svg (l'image).
+  var draw = SVG('resistanceEcoulement').viewbox({ x: 50, y: 25, width: 750, height: 375 });
+
+	//Définition des paramètres par défaut du système.
+	var relative = 1; //Diamètre relatif de l'ouvertude
+	var diameter = 100; //Diamètre du tube
+
+	var glassColor = new SVG.Color('#6699ff');
+	var darkGlassColor = new SVG.Color('#4466cc');
+	var lightGlassColor = new SVG.Color('#bbddff');
+	var waterColor = new SVG.Color('#1133dd');
+
+	/////////////////////////////////////////////////////////////////////
+ 	// Création des différents éléments de l'image pour l'introduction //
+	/////////////////////////////////////////////////////////////////////
+
+	//Dessin des manomètres
+	var manometre = draw.path('M 220 150 v 170 a 20 20 0 0 0 20 20 h 70 a 20 20 0 0 0 20 -20 v -170').fill('none').stroke({ width: 20, color: glassColor });
+	var water = draw.path('M 220 260 v 60 a 20 20 0 0 0 20 20 h 70 a 20 20 0 0 0 20 -20 v -60').fill('none').stroke({ width: 8, color: waterColor });
+
+	//Dessin du tube
+	var tubeTop = draw.path('M 100 90 v 10 h 500 v -10 z').attr({ fill: glassColor});
+	var tubeBottom = draw.path('M 100 200 v 10 h 500 v -10 z').attr({ fill: glassColor});
+	var tubeEnd = draw.path('M 600 90 v 10 a 20 50 0 0 1 0 100 v 10 a 24 60 0 0 0 0 -120 z').attr({ fill: darkGlassColor});
+	var tubeInt = draw.path('M 100 100 a 20 50 0 0 1 0 100 h 500 a 20 50 0 0 0 0 -100 z').attr({ fill: lightGlassColor});
+
+	//Dessin des lignes à l'intérieur du tube
+	var tubeLines = draw.group();
+	tubeLines.line1 = tubeLines.path('M 250 100 a 20 50 0 0 1 0 100').fill('none').stroke({ width: 1, color: glassColor });
+	tubeLines.line2 = tubeLines.path().fill('none').stroke({ width: 1, color: glassColor });
+	tubeLines.line3 = tubeLines.path().fill('none').stroke({ width: 1, color: glassColor });
+	tubeLines.line4 = tubeLines.path('M 450 100 a 20 50 0 0 1 0 100').fill('none').stroke({ width: 1, color: glassColor });
+
+	//Dessin des lignes et du texte pour la variation de pressionTube
+	var pressure = draw.group();
+	pressure.line1 = pressure.path().fill('none').stroke({ width: 1, color: 'black', dasharray: '10,12' });
+	pressure.line2 = pressure.path().fill('none').stroke({ width: 1, color: 'black', dasharray: '10,12' });
+	pressure.quoteline = pressure.path().fill('none').stroke({ width: 1, color: 'black' }).vector({size:1.5,position:'both',style:'curved'});
+	pressure.dP = pressure.text("ΔP").font({family: 'Helvetica', size: 24, anchor: 'middle'}).move(430,247);
+	pressure.explication1 = pressure.text("Puisque la partie centrale est\nplus étroite, le fluide s'y déplace\nplus rapidement et la pression y\nest plus faible.").font({family: 'Helvetica', size: 18}).move(470,230);
+	pressure.explication2 = pressure.text("Puisque la partie centrale est\nplus large, le fluide s'y déplace\nplus lentement et la pression y\nest plus élevée.").font({family: 'Helvetica', size: 18}).move(470,230);
+
+
+
+	var path1 = draw.path('M 100 -45 h 500').stroke('black').fill('none');
+
+	var tubeMask = draw.mask().add(draw.path('M 100 100 a 20 50 0 0 1 0 100 v50 h 500 v-50 a 20 50 0 0 0 0 -100 v -50 h -500 z').fill({ color: '#fff' }))
+
+	function getX(t) { //Détermine la position x des particules en fonction du temps.
+		//La particule doit aller à la vitesse 1 entre x=0 et 150 et après 350, vitesse 2 entre 200 et 300
+		var steps = [140,60,100];
+		var v1=700;
+		var relative = parseFloat(document.getElementById("relativeDiameter").value);
+		var v2 = v1/(relative**2);
+		var a = (v2**2-v1**2)/(2*steps[1]);
+
+		var tmax = steps[0]/v1;
+		if(t<tmax || relative==1) {return v1*t;} //Si relative==1, les particules vont toujours à la vitesse v1...
+
+		t -= tmax;
+		tmax = (-v1 + Math.sqrt(v1**2+2*a*steps[1]))/a;
+		if (t < tmax) {return steps[0]+v1*t+0.5*a*t**2;}
+
+		t -= tmax;
+		tmax = steps[2]/v2;
+		if (t < tmax) {return steps[0]+steps[1]+v2*t;}
+
+		t -= tmax;
+		tmax = (v2 - Math.sqrt(v2**2-2*a*steps[1]))/a;
+		if (t < tmax) {return steps[0]+steps[1]+steps[2]+v2*t-0.5*a*t**2;}
+
+		t -= tmax;
+		return steps[0]+2*steps[1]+steps[2]+v1*t;
+	}
+
+	var particles=[], duree = 10000;
+	var particlesPosition=[[2.57852, 0.85185], [4.27419, -0.71031], [7.02406, -0.85115], [5.24357, 0.86833], [5.90315, 0.73217], [6.49297, -0.10679], [2.62318, -0.95568], [8.92572, -0.78993], [0.24252, -0.42801], [2.34929, 0.46337], [8.56032, 0.23969], [0.1482, -0.98085], [4.34627, -0.91361], [7.58641, 0.6147], [6.74088, 0.86508], [3.28131, -0.82491], [5.67817, 0.77068], [6.83727, -0.78309], [6.32726, -0.0073], [9.9324, -0.36574], [2.04359, -0.12034], [3.65976, -0.07181], [0.50429, -0.01383], [1.47393, -0.04798], [5.90782, -0.10829], [8.06094, 0.2615], [7.60391, 0.9971], [4.19585, 0.6276], [8.29787, -0.21759], [2.37324, -0.85379], [3.79707, 0.37], [0.81117, 0.3482], [5.51881, -0.74786], [3.71369, 0.13038], [6.29918, -0.613], [4.02334, 0.81672], [4.88395, -0.81582], [9.0461, 0.73809], [7.47235, -0.43692], [7.81083, 0.60087], [5.70818, -0.529], [1.789, 0.56178], [0.44886, 0.06212], [7.22562, -0.52859], [7.21262, -0.62822], [6.97191, -0.29459], [3.30004, 0.87193], [9.31898, -0.53709], [0.65581, 0.30587], [4.5628, 0.19465], [8.75659, -0.25505], [3.51544, 0.30458], [4.02531, 0.53047], [7.53115, 0.90974], [1.02697, 0.86389], [8.23275, 0.8254], [6.42235, 0.05474], [6.23545, 0.643], [4.44778, 0.65672], [8.47019, -0.04467], [1.89133, 0.57962], [5.08451, 0.34382], [2.06558, -0.17357], [8.54115, -0.97797], [0.73575, 0.25704], [8.3947, 0.74422], [1.36897, 0.68288], [7.36174, 0.26847], [5.91748, -0.3654], [3.98647, -0.34308], [7.08188, 0.17551], [9.94457, 0.38712], [3.63857, 0.50479], [8.42173, -0.48511], [3.83041, 0.37828], [9.92029, -0.5098], [3.97375, 0.41496], [3.00598, -0.3696], [1.51828, -0.97276], [3.48273, 0.90723], [9.24992, -0.67963], [3.65245, 0.47556], [5.19484, 0.22483], [5.23771, 0.3977], [5.67412, -0.34237], [2.10737, -0.68639], [2.18131, -0.37461], [8.79554, 0.82061], [0.24259, 0.67128], [8.72476, -0.30384], [8.74523, 0.40522], [2.58135, 0.46635], [4.30609, -0.74052], [1.2343, -0.15686], [3.90684, 0.11283], [5.67835, 0.41972], [6.68666, -0.4211], [1.46791, 0.00303], [5.04051, 0.3819], [8.48794, 0.05585], [0.67871, 0.2485], [9.11583, -0.55402], [5.11378, -0.2329], [1.78923, 0.80893], [8.79561, -0.62843], [6.32375, 0.386], [8.2251, -0.47125], [6.47279, 0.2308], [1.55652, -0.5864], [7.32384, -0.81582], [7.8871, 0.85369], [3.03089, 0.62079], [1.75564, 0.6728], [8.8613, -0.3814], [5.93124, 0.3764], [3.3713, -0.37894], [0.49842, -0.60645], [9.17108, 0.68412], [5.25386, 0.32129], [8.66136, -0.60315], [0.75251, 0.78755], [0.36337, 0.7829], [1.44901, 0.12542], [9.01172, 0.11674], [0.93807, 0.28653], [9.07765, 0.99012], [6.57792, -0.8413], [5.69289, -0.21015], [8.66257, -0.97782], [6.18772, -0.63579], [7.48074, 0.11443], [8.95197, 0.75346], [1.98129, -0.00475], [5.34626, -0.03184], [8.80591, 0.37003], [0.49512, -0.41972], [3.00937, -0.77279], [7.56226, 0.00383], [7.55467, 0.4788], [5.85531, -0.43657], [9.17494, 0.10489], [6.3059, -0.17013], [0.61405, -0.55438], [2.74298, -0.19626], [2.97699, -0.30327], [1.04624, 0.58628], [8.38977, 0.52004], [8.63081, 0.59466], [4.90062, -0.32748], [8.48856, -0.31386], [3.08285, -0.72133], [7.58569, 0.28518], [8.53956, 0.00937], [4.35982, -0.33629], [2.83208, 0.15351], [0.37369, 0.94088], [1.23252, -0.33327], [8.58832, -0.27591], [9.89615, 0.64203], [0.73944, -0.84552], [4.68974, 0.18222], [4.00636, 0.89021], [6.22625, -0.83601], [9.34018, 0.82539], [7.04994, 0.80269], [5.12713, -0.70143], [8.33748, -0.3626], [7.37048, 0.29674], [4.88292, 0.91536], [4.05252, -0.27796], [4.19819, -0.6805], [2.20976, -0.13916], [0.54242, -0.57617], [6.17969, -0.69839], [4.44456, 0.80699], [5.48556, 0.69971], [6.17221, -0.44348], [7.10753, 0.58789], [6.62737, 0.05306], [5.895, -0.68564], [8.90281, 0.83392], [7.02749, -0.59856], [6.83763, -0.43546], [5.10049, 0.7455], [2.00206, -0.2993], [1.02864, 0.19806], [6.79038, 0.7254], [4.58981, -0.1738], [9.86697, -0.91226], [1.29479, -0.72915], [3.51923, -0.14225], [2.19678, 0.79914], [1.67159, 0.73764], [5.98238, 0.6862], [3.29723, -0.43455], [9.66011, -0.93518], [6.40715, 0.20454], [9.41136, 0.14125], [2.51469, -0.36222], [8.36125, 0.57054]];
+	for(var i=0; i<particlesPosition.length; i++) {
+		particles[i] = draw.circle(3).fill('black').maskWith(tubeMask);
+
+		particles[i].randomY = particlesPosition[i][1];
+
+		particles[i].animate(duree, '-',-particlesPosition[i][0]*duree/10).during(function(t, morph, eased){
+			var point = path1.pointAt(getX(t))
+
+			this.attr({ cx: point.x, cy: this.randomY*point.y+150 })
+		}).loop(true)
+	}
+
+
+	//Redessine l'image en tenant compte des contrôles externes
+  redraw();
+
+  function redraw(part) {
+		//Récupère les valeurs de l'utilisateur
+		diameter =100;
+		relative = parseFloat(document.getElementById("relativeDiameter").value);
+
+		var delta = diameter*(1-relative)/2;
+		tubeTop.plot('M 100 90 v 10 h 150 l 50 '+delta+' h 100 l 50 '+(-delta)+' h 150 v -10 h -150 l -50 '+delta+' h -100 l -50 '+(-delta)+' h -150').attr({ fill: glassColor});
+		tubeBottom.plot('M 100 200 v 10 h 150 l 50 '+(-delta)+' h 100 l 50 '+(delta)+' h 150 v -10 h -150 l -50 '+(-delta)+' h -100 l -50 '+(delta)+' h -150').attr({ fill: glassColor});
+		tubeInt.plot('M 100 100 a 20 50 0 0 1 0 100 h 150 l 50 '+(-delta)+' h 100 l 50 '+(delta)+' h 150 a 20 50 0 0 0 0 -100 h -150 l -50 '+delta+' h -100 l -50 '+(-delta)+' h -150').attr({ fill: lightGlassColor});
+
+		if(relative==1) {
+			tubeLines.hide();
+			pressure.hide();
+
+			path1.plot('M 100 -45 h 550');
+		}
+		else {
+			tubeLines.line2.plot('M 300 '+(100+delta)+' a '+(20*relative)+' '+(50*relative)+' 0 0 1 0 '+(100*relative));
+			tubeLines.line3.plot('M 400 '+(100+delta)+' a '+(20*relative)+' '+(50*relative)+' 0 0 1 0 '+(100*relative));
+			tubeLines.show();
+			pressure.show();
+
+			if(relative>1) {
+				pressure.explication1.hide();
+				pressure.explication2.show();
+
+				var closePosition = 5*(1-relative);
+				path1.plot('M 100 -45 c 140 0, 140 0, 150 '+(closePosition)+' s 30 '+(delta-closePosition)+', 100 '+(delta-closePosition)+' s 90 '+(-delta+2*closePosition)+', 100 '+(-delta+closePosition)+' s 10 '+(-closePosition)+', 200 '+(-closePosition));
+			}
+			else {
+				pressure.explication1.show();
+				pressure.explication2.hide();
+
+				var closePosition = 5*(1-relative);
+				path1.plot('M 100 -45 c 190 0, 190 '+(delta-2*closePosition)+', 200 '+(delta-closePosition)+' s 90 '+closePosition+', 100 0 s 10 '+(-delta+closePosition)+', 250 '+(-delta+closePosition));
+			}
+		}
+
+		var pressureDelta = 85*(1-relative)
+		water.plot('M 220 '+(260+pressureDelta)+' v '+(60-pressureDelta)+' a 20 20 0 0 0 20 20 h 70 a 20 20 0 0 0 20 -20 v '+(-60-pressureDelta));
+		pressure.line1.plot('M 215 '+(260+pressureDelta)+' h 190');
+		pressure.line2.plot('M 325 '+(260-pressureDelta)+' h 80');
+		pressure.quoteline.plot('M 396.5 '+(260-pressureDelta)+' v '+2*pressureDelta);
+  }
+
+</script>
