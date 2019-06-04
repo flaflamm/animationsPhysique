@@ -5,6 +5,7 @@ $animations = array(
 	'accerateurLineaire'=>array('titre'=>'Accélérateur Linéaire', 'cours'=>'C42', 'chemin'=>'C42/accelerateurLineaire.html'),
 	'resistanceEcoulement'=>array('titre'=>'Résistance à l\'écoulement dans un orifice', 'cours'=>'143', 'chemin'=>'143/resistanceEcoulement.html'),
   'chargeinduction'=>array('titre'=>'Charge par induction', 'cours'=>'NYB', 'chemin'=>'NYB/chargeinduction.html'),
+  'electrophore'=>array('titre'=>'L\'électrophore', 'cours'=>'NYB', 'chemin'=>'NYB/electrophore.html'),
     //'ombre'=>array('titre'=>'Ombre & Pénombre', 'cours'=>'A42', 'chemin'=>'A42/penombre.html')
 );
 

@@ -1,0 +1,87 @@
+<!--
+Développé le 2019-06-04 par Michaël Juneau
+
+But: Démontrer le déplacement des charges lors d'une charge par induction dans le contexte d'un électrophore.
+-->
+
+<div id="imageContainer" class="aspectRation4-1"><div id="electrophore"></div></div>
+
+<div class="controls">
+  <label for="axeTemps">Approche de l'électrophore':&nbsp;<input type="range" id="axeTemps" name="axeTemps" value="0" max="600" min="0" step="4" oninput="redraw()" onchange="redraw()"></label>
+</div>
+
+<script src='utils/includes/charge.js?v=<?php echo mt_rand(); ?>'></script>
+<script>
+
+  //Création de l'élément svg (l'image).
+  var draw = SVG('electrophore').viewbox({ x: 0, y: 0, width: 1000, height: 500 });
+
+  var hauteurDeltaChargesBasElectrophore = 50;
+  var hauteurDeltaChargesHautElectrophore = 0;
+  var hauteurChargesLaine = 350;
+  var chargesLaine = [];
+  var chargesElectroBas = [];
+  var chargesElectroHaut = [];
+
+  var electrophoreLayer = draw.rect(950,150).x(25).y(0).fill('#dadada');
+  var laineLayer = draw.rect(950,150).x(25).y(350).fill('#8888da');
+
+//charges du bas, dans la laine
+  for(i=0; i<9; i++){
+    var charge = draw.Charge();
+    charge.move(i*(100) + 75 ,hauteurChargesLaine);
+    charge.setPolarite(-1);
+    chargesLaine.push(charge);
+  }
+
+//charges de la face du bas de l'électrophore
+  for(i=0; i<9; i++){
+    var charge = draw.Charge();
+    charge.move(i*(100) + 75,50+100-hauteurDeltaChargesBasElectrophore);
+    chargesElectroBas.push(charge);
+  }
+
+//charges de la face du haut de l'électrophore
+  for(i=0; i<9; i++){
+    var charge = draw.Charge();
+    charge.move(i*(100) + 75,50+100-hauteurDeltaChargesBasElectrophore);
+    charge.setPolarite(-1);
+    charge.fill()
+    chargesElectroHaut.push(charge);
+  }
+
+  redraw();
+
+  function redraw(){
+    var index = parseFloat(document.getElementById("axeTemps").value);
+
+
+//descente de l'électrophore, 0 à 2500
+if(index <=200){
+    for(i=0;i<9;i++){
+      //chargesElectroBas[i].fill({'fill-opacity':(index-50)/250});
+      chargesElectroBas[i].y(index+150-hauteurDeltaChargesBasElectrophore);
+      debut=100;
+      fin = 200;
+      chargesElectroHaut[i].x(i*(100) + 75).y(debut + index*(fin-debut)/200);
+    }
+    electrophoreLayer.y(index);
+  }
+  //mise à terre
+if(index>200 && index <=400){
+  for(i=0;i<9;i++){
+    chargesElectroHaut[i].x(i*(100) + 75 -(i+2)*(index));
+  }
+  electrophoreLayer.y(200);
+}
+  //remontée
+if(index>400){
+    electrophoreLayer.y(600-index);
+    for(i=0;i<9;i++){
+    chargesElectroBas[i].y(800-(index+150-hauteurDeltaChargesBasElectrophore));
+  }
+}
+
+  }
+
+</script>

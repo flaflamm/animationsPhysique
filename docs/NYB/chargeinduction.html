@@ -82,7 +82,7 @@ But: Démontrer le déplacement des charges lors d'une charge par induction, ave
 
         var debutY = centreBouleGaucheY - rayonCharges * Math.cos(j * angleVoisinsDebut);
         var finY = centreBouleGaucheY - rayonCharges * Math.cos(i * angleVoisinsFin + extraAngleFin);
-        chargesGauche[j].x(debutX + (finX-debutX) * index/400).y(debutY + (finY-debutY) * index/400);
+        chargesGauche[j].x(debutX + (finX-debutX+30) * index/400).y(debutY + (finY-debutY) * index/400);
         chargesGauche[j].setPolarite(polGauche);
       }
 

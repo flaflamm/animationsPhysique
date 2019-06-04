@@ -11,15 +11,17 @@ SVG.Charge = SVG.invent({
       this.circle(radius).fill('#000077');
 
       var textePolarite = 'o';
+      var yPolarite = -30;
       switch(polarite){
         case 1:
         textePolarite = '+';
           break;
         case -1:
         textePolarite = '-';
+        yPolarite = -40;
           break;
       }
-      this.symbolePolarite = this.text(textePolarite).attr({x:25, y:-30});
+      this.symbolePolarite = this.text(textePolarite).attr({x:25, y:yPolarite});
       this.symbolePolarite.font({anchor: 'middle', size: 60, family: 'Helvetica', fill: '#ffffff'});
 
            return this;
