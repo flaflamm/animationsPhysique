@@ -26,6 +26,12 @@ But: Démontrer le déplacement des charges lors d'une charge par induction dans
   var chargesElectroHautFinales = []; //moitié des charges positives surface du haut à la fin
   var chargesEquilibreRemontee = []; //électrons qui servent à la relaxation finale durant la remontée
 
+  var miseATerre = draw.group();
+  miseATerre.line1 = miseATerre.path('M -480 25 v 20').fill('none').stroke({ width: 2, color: 'black'});
+  miseATerre.line2 = miseATerre.path('M -470 15 v 40').fill('none').stroke({ width: 2, color: 'black'});
+  miseATerre.line3 = miseATerre.path('M -460 5 v 60').fill('none').stroke({ width: 2, color: 'black'});
+  miseATerre.line4 = miseATerre.path('M -450 -5 v 80').fill('none').stroke({ width: 2, color: 'black'});
+  miseATerre.line5 = miseATerre.path('M -450 35 h 500').fill('none').stroke({ width: 2, color: 'black'});
 
   var plastiqueLayer = draw.rect(950,150).x(25).y(350).fill('#8888da');
 
@@ -109,6 +115,8 @@ if(index <=200){
 
   masqueLayerAnnulation.y(index+75);
   masqueInverseHautFinal.y(-200);
+  miseATerre.y(index);
+  miseATerre.line5.plot('M -450 35 h ' + (280+index));
   }
   //mise à terre
 if(index>200 && index <=400){
@@ -128,6 +136,8 @@ if(index>200 && index <=400){
 
     masqueInverseHautFinal.y(-200);
     masqueInverseHautFinal.attr({'fill-opacity':1});
+    miseATerre.y(200);
+    miseATerre.line5.plot('M -450 35 h ' + (680));
 }
   //remontée
 if(index>400){
@@ -146,6 +156,8 @@ if(index>400){
 
   masqueInverseHautFinal.y(600-index);
   masqueInverseHautFinal.attr({'fill-opacity':(600-index)/200});
+  miseATerre.y(600-index);
+  miseATerre.line5.plot('M -450 35 h ' + (480-(index-400)));
 }
 
   }
