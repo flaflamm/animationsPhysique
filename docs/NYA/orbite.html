@@ -5,15 +5,24 @@ Démo d'animation d'orbite gérée par un delai temporelle. L'algorithme simplet
 But: Montrer des orbites circulaires, elliptiques, certains vecteurs associés au mouvement circulaire
 -->
 
-<div class="imageContainer aspectRation2-1"><div id="orbite"></div></div>
+<div id="imageContainer" class="aspectRation2-1"><div id="orbite"></div></div>
 
 <div class="controls">
-  <label for="masseCentre">Masse de l'objet central:&nbsp;<input type="range" id="masseCentre" name="masseCentre" value="30" max="40" min="24" step="0.2"></label>
-  <button type="button" onclick="redraw()">Click Me!</button>
-  <label for="vitesseTangentielle">Vitesse Tangentielle:&nbsp;<input type="checkbox" class="switch" id="vitesseTangentielle" name="vitesseTangentielle"></label><br>
-  <label for="accCentripete">Accélération Centripète:&nbsp;<input type="checkbox" class="switch" id="accCentripete" name="accCentripete"></label><br>
-  <label for="trace">Trace d'orbite:&nbsp;<input type="checkbox" class="switch" id="trace" name="trace"></label><br>
-</div>
+  <div class="details open">
+    <h2 class="detailsAlwaysVisible" onclick="redraw('intro');">Introduction</h2>
+    <p class="detailsToHide">La trajectoire d'une orbite stable prend la forme d'une ellipse. L'énergie mécanique, constituée d'énergie cinétique et d'énergie potentielle gravitationnelle, est stable.</p>
+    <p class="detailsToHide">Lorsque l'objet central est beaucoup plus massif que son satellite, on peut négliger le mouvement du corps central. En réalité, les deux corps tournent autour d'un centre de masse commun (non illustré ici).</p>
+    <p class="detailsToHide">L'énergie cinétique $K=\frac{1}{2}m_1v^2$ est maximale lorsque la distance est petite. $v$ est le module de la vitesse du satellite et $m_1$ sa masse.</p>
+    <p class="detailsToHide">L'énergie potentielle gravitationnelle $U_g=-\frac{Gm_1m_2}{r^2}$ est maximale lorsque la distance est grande. $m_2$ est la masse du corps central et $r$ est la distance centre à centre entre les deux corps.</p>
+    <p class="detailsToHide">Il est possible de démontrer que la somme de ces deux énergies est $E_{tot} = -\frac{Gm_1m_2}{r}$. Y arriverez-vous (indice: servez-vous de la dynamique du mouvement circulaire)?</p>
+
+
+    <label for="masseCentre">Masse de l'objet central:&nbsp;<input type="range" id="masseCentre" name="masseCentre" value="30" max="40" min="24" step="0.2"></label>
+    <label for="vitesseTangentielle">Vitesse Tangentielle:&nbsp;<input type="checkbox" class="switch" id="vitesseTangentielle" name="vitesseTangentielle"></label><br>
+    <label for="accCentripete">Accélération Centripète:&nbsp;<input type="checkbox" class="switch" id="accCentripete" name="accCentripete"></label><br>
+    <label for="trace">Trace d'orbite:&nbsp;<input type="checkbox" class="switch" id="trace" name="trace"></label><br>
+
+  </div>
 </div>
 
 <script src='utils/includes/vector.js'></script>
