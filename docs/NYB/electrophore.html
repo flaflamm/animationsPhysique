@@ -7,7 +7,15 @@ But: Démontrer le déplacement des charges lors d'une charge par induction dans
 <div id="imageContainer" class="aspectRation4-1"><div id="electrophore"></div></div>
 
 <div class="controls">
-  <label for="axeTemps">Approche de l'électrophore':&nbsp;<input type="range" id="axeTemps" name="axeTemps" value="0" max="600" min="0" step="4" oninput="redraw()" onchange="redraw()"></label>
+  <div class="details open">
+    <h2 class="detailsAlwaysVisible" onclick="redraw('intro');">Introduction</h2>
+    <p class="detailsToHide">La plaque du bas est isolante et préalablement chargée négativement. On approche une plaque conductrice tout en observant une séparation de charges</p>
+    <p class="detailsToHide">Une mise à terre du côté supérieur élimine les charges négatives.</p>
+    <p class="detailsToHide">On obtient finalement un conducteur chargé positivement, l'inverse de la charge de la couche isolante..</p>
+
+
+    <label for="axeTemps">Approche de l'électrophore':&nbsp;<input type="range" id="axeTemps" name="axeTemps" value="0" max="600" min="0" step="4" oninput="redraw()" onchange="redraw()"></label>
+  </div>
 </div>
 
 <script src='utils/includes/charge.js?v=<?php echo mt_rand(); ?>'></script>
