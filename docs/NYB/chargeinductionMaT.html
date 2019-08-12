@@ -1,0 +1,221 @@
+<!--
+Développé le 2019-08-01 par Michaël Juneau
+
+But: Charger un conducteur par induction à l'aide d'une mise à terre.
+-->
+
+<div id="imageContainer" class="aspectRation4-1"><div id="chargeinductionMaT"></div></div>
+
+<div class="controls">
+  <div class="details open">
+    <h2 class="detailsAlwaysVisible" onclick="redraw('intro');">Charge par induction en utilisant une mise à terre.</h2>
+    <p class="detailsToHide">La sphère conductrice de droite est préalablement chargée. On approche le conducteur neutre de gauche et une séparation des charges s'effectue.</p>
+    <p class="detailsToHide">Tout en maintenant la distance entre les deux sphères petite mais non nulle, on peut évacuer la charge de notre choix en touchant le côté souhaité de la sphère de gauche.</p>
+    <p class="detailsToHide">L'exemple ici nous donne au final une sphère conductrice de même valeur de charge, mais de polarité inverse que la sphère de droite.</p>
+
+    <label for="axeTemps">Approche de la boule gauche:&nbsp;<input type="range" id="axeTemps" name="axeTemps" value="0" max="1000" min="0" step="4" oninput="redraw()" onchange="redraw()"></label>
+  </div>
+</div>
+
+<script src='utils/includes/vector.js'></script>
+<script src='utils/includes/charge.js?v=<?php echo mt_rand(); ?>'></script>
+<script>
+
+  //Création de l'élément svg (l'image).
+  var draw = SVG('chargeinductionMaT').viewbox({ x: 0, y: 0, width: 1000, height: 500 });
+
+    var centreBouleGaucheX = 100;
+    var centreBouleGaucheY = 200;
+
+    var centreBouleDroiteX = 800;
+    var centreBouleDroiteY = 200;
+
+    var finaleBouleGaucheX = 300;
+    var finaleBouleDroiteX = centreBouleDroiteX;
+
+    var decalageAngle = 18.0 * Math.PI/180.0;
+    var angleVoisinsDebut = 36.0 * Math.PI/180.0;
+    var angleVoisinsFin = 18.0 * Math.PI/180.0;
+    var extraAngleFin = 10.0 * Math.PI/180.0;
+
+    var rayonBouleGauche = 160;
+    var rayonBouleDroite = 160;
+
+    var rayonCharges = 135;
+    var chargesGauche = [];
+    var chargesDroite = [];
+
+
+        var miseATerre = draw.group();
+        miseATerre.line1 = miseATerre.path('M -400 220 v 20').fill('none').stroke({ width: 2, color: 'black'});
+        miseATerre.line2 = miseATerre.path('M -390 210 v 40').fill('none').stroke({ width: 2, color: 'black'});
+        miseATerre.line3 = miseATerre.path('M -380 200 v 60').fill('none').stroke({ width: 2, color: 'black'});
+        miseATerre.line4 = miseATerre.path('M -370 190 v 80').fill('none').stroke({ width: 2, color: 'black'});
+        miseATerre.line5 = miseATerre.path('M -370 230 h 200').fill('none').stroke({ width: 2, color: 'black'});
+
+    var bouleGauche = draw.circle(2*rayonBouleGauche).x(centreBouleGaucheX-rayonCharges).y(centreBouleGaucheY-rayonCharges).fill('#dadada');
+    var bouleDroite = draw.circle(2*rayonBouleDroite).x(centreBouleDroiteX-rayonCharges).y(centreBouleDroiteY-rayonCharges).fill('#dadada');
+
+
+
+
+//Les charges + de la sphère de gauche
+    for(i=0; i<10; i++){
+      var charge = draw.Charge();
+      charge.move(centreBouleGaucheX + rayonBouleGauche * Math.cos(i * angleVoisinsDebut + decalageAngle),
+       centreBouleGaucheY - rayonBouleGauche * Math.sin(i * angleVoisinsDebut + decalageAngle))
+       chargesGauche.push(charge);
+    }
+//Les charges - de la sphère de gauche
+    for(i=10; i<20; i++){
+      var charge = draw.Charge();
+      charge.move(centreBouleGaucheX + rayonBouleGauche * Math.cos(i * angleVoisinsDebut + decalageAngle),
+       centreBouleGaucheY - rayonBouleGauche * Math.sin(i * angleVoisinsDebut + decalageAngle))
+       charge.setPolarite(-1);
+       chargesGauche.push(charge);
+    }
+    for(i=0; i<10; i++){
+      var charge = draw.Charge();
+      charge.move(centreBouleDroiteX - rayonBouleDroite * Math.cos(i * angleVoisinsDebut + decalageAngle),
+       centreBouleDroiteY - rayonBouleDroite * Math.sin(i * angleVoisinsDebut + decalageAngle))
+       chargesDroite.push(charge);
+    }
+
+var masqueBouleGauche = draw.circle(2*rayonBouleGauche).x(centreBouleGaucheX-rayonCharges).y(centreBouleGaucheY-rayonCharges).fill('#dadada');
+
+    redraw();
+
+    function redraw(){
+      var polGauche = 1;
+      var index = parseFloat(document.getElementById("axeTemps").value);
+
+
+      //Partie 1, approche de la boule gauche vers la boule droite (séparation des charges)
+      if(index <= 400){
+        bouleGauche.x(centreBouleGaucheX-rayonCharges + (finaleBouleGaucheX - (centreBouleGaucheX-rayonCharges))*index/400);
+        bouleDroite.x(centreBouleDroiteX-rayonCharges);
+       //Boule Gauche
+        //charges + de la boule gauche, face gauche
+        for(i=0; i<10; i++){
+          j=i;
+
+          var debutX = centreBouleGaucheX;
+          var finX = centreBouleGaucheX - polGauche * rayonCharges * Math.sin(i * angleVoisinsFin + extraAngleFin) + finaleBouleGaucheX;
+
+          var debutY = centreBouleGaucheY - rayonCharges * Math.cos(j * angleVoisinsFin);
+          var finY = centreBouleGaucheY - rayonCharges * Math.cos(i * angleVoisinsFin + extraAngleFin);
+          chargesGauche[j].x(debutX + (finX-debutX+30) * index/400).y(debutY + (finY-debutY) * index/400);
+        }
+
+        //charges - de la boule gauche, face droite
+        for(i=10; i<20; i++){
+          j=i;
+
+          var debutX = centreBouleGaucheX;
+          var finX = centreBouleGaucheX - polGauche * rayonCharges * Math.sin(i * angleVoisinsFin + extraAngleFin) + finaleBouleGaucheX;
+
+          var debutY = centreBouleGaucheY - rayonCharges * Math.cos(j * angleVoisinsFin);
+          var finY = centreBouleGaucheY - rayonCharges * Math.cos(i * angleVoisinsFin + extraAngleFin);
+          chargesGauche[j].x(debutX + (finX-debutX+30) * index/400).y(debutY + (finY-debutY) * index/400);
+        }
+
+        //Boule Droite
+        for(i=0; i<10; i++){
+          j=i+7;
+          if(j>9)j-=10;
+          var debutX = centreBouleDroiteX - polGauche * rayonCharges * Math.sin(j * angleVoisinsDebut+ decalageAngle);
+          var finX = centreBouleDroiteX - polGauche * rayonCharges * Math.sin(i * angleVoisinsFin+ decalageAngle/2.0);
+
+          var debutY = centreBouleDroiteY - rayonCharges * Math.cos(j * angleVoisinsDebut+ decalageAngle);
+          var finY = centreBouleDroiteY - rayonCharges * Math.cos(i * angleVoisinsFin + decalageAngle/2.0);
+          chargesDroite[j].x(debutX + (finX-debutX) * index/400).y(debutY + (finY-debutY) * index/400)
+        }
+
+        masqueBouleGauche.x(centreBouleGaucheX-rayonCharges + (finaleBouleGaucheX - (centreBouleGaucheX-rayonCharges))*index/400).attr({'fill-opacity':(400-index)/400});
+
+        miseATerre.line5.plot('M -370 230 h ' + (200+index*1.15));
+      }
+      //Partie 2a: évacuation des charges de la face gauche de la boule gauche, s'aligner horizontalement
+      if(index > 400 &&  index <= 500)
+      {
+        //charges + de la boule gauche, face gauche
+        for(i=0; i<10; i++){
+          var debutX = centreBouleGaucheX - polGauche * rayonCharges * Math.sin(i * angleVoisinsFin + extraAngleFin) + finaleBouleGaucheX;
+          var finX = 250;
+
+          var debutY = centreBouleGaucheY - rayonCharges * Math.cos(i * angleVoisinsFin + extraAngleFin);
+          var finY = 200;
+          chargesGauche[i].x(debutX + (finX-debutX+30) * (index-400)/100).y(debutY + (finY-debutY) * (index-400)/100);
+
+        }
+
+        miseATerre.line5.plot('M -370 230 h ' + (200+400*1.15));
+      }
+      //Partie 2b: évacuation des charges de la face gauche de la boule gauche, s'enfuir dans la mise à terre
+      if(index > 500 &&  index <= 600)
+      {
+        //charges + de la boule gauche, face gauche
+        for(i=0; i<10; i++){
+          var debutX = 250;
+          var finX = -430;
+
+          var debutY = 200;
+          chargesGauche[i].x(debutX + (finX-debutX+30) * (index-500)/100).y(debutY);
+          chargesGauche[i].show();
+        }
+        //charges - de la boule gauche, face droite
+        for(i=10; i<20; i++){
+          j=i;
+
+          var debutX = centreBouleGaucheX;
+          var finX = centreBouleGaucheX - polGauche * rayonCharges * Math.sin(i * angleVoisinsFin + extraAngleFin) + finaleBouleGaucheX;
+
+          var debutY = centreBouleGaucheY - rayonCharges * Math.cos(j * angleVoisinsFin);
+          var finY = centreBouleGaucheY - rayonCharges * Math.cos(i * angleVoisinsFin + extraAngleFin);
+          chargesGauche[j].x(debutX + (finX-debutX+30)).y(debutY + (finY-debutY));
+        }
+        miseATerre.line5.plot('M -370 230 h ' + (200+400*1.15));
+      }
+      //Partie 3: éloignement de la boule de gauche vers la gauche
+      if(index > 600){
+
+        bouleGauche.x(centreBouleGaucheX-rayonCharges + (finaleBouleGaucheX - (centreBouleGaucheX-rayonCharges))*(1000-index)/400);
+
+        for(i=0; i<10; i++){
+          chargesGauche[i].hide();
+        }
+
+        //charges - de la boule gauche, face droite
+        for(i=10; i<20; i++){
+          j=i+3;
+          if(j>19)j-=10;
+
+          var debutX = centreBouleGaucheX - polGauche * rayonCharges * Math.sin(j * angleVoisinsDebut);
+          var finX = centreBouleGaucheX - polGauche * rayonCharges * Math.sin(i * angleVoisinsFin + extraAngleFin) + finaleBouleGaucheX;
+
+          var debutY = centreBouleGaucheY - rayonCharges * Math.cos(j * angleVoisinsDebut);
+          var finY = centreBouleGaucheY - rayonCharges * Math.cos(i * angleVoisinsFin + extraAngleFin);
+
+          chargesGauche[j].x(debutX + (finX-debutX+30) * (1000-index)/400).y(debutY + (finY-debutY) * (1000-index)/400);
+        }
+
+        //Boule Droite
+        for(i=0; i<10; i++){
+          j=i+7;
+          if(j>9)j-=10;
+          var debutX = centreBouleDroiteX - polGauche * rayonCharges * Math.sin(j * angleVoisinsDebut+ decalageAngle);
+          var finX = centreBouleDroiteX - polGauche * rayonCharges * Math.sin(i * angleVoisinsFin+ decalageAngle/2.0);
+
+          var debutY = centreBouleDroiteY - rayonCharges * Math.cos(j * angleVoisinsDebut+ decalageAngle);
+          var finY = centreBouleDroiteY - rayonCharges * Math.cos(i * angleVoisinsFin + decalageAngle/2.0);
+          chargesDroite[j].x(debutX + (finX-debutX) * (1000-index)/400).y(debutY + (finY-debutY) * (1000-index)/400)
+        }
+
+
+        miseATerre.line5.plot('M -370 230 h ' + (1000-index)*3/2);
+      }
+
+
+    }
+
+</script>
